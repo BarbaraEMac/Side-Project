@@ -1,0 +1,43 @@
+ <POLICY name="sample" 
+   discuri="http://appsy-daisy.appspot.com/cookiepolicy.html"
+   opturi="http://appsy-daisy.appspot.com/opt.html">
+   <ENTITY>
+     <DATA-GROUP>
+       <DATA ref="#business.name">Appsy Daisy</DATA>
+       <DATA ref="#business.contact-info.online.email">fake@gmail.com</DATA>
+
+     </DATA-GROUP>
+   </ENTITY>
+   <ACCESS><none/></ACCESS>
+   <DISPUTES-GROUP>
+     <DISPUTES resolution-type="service"
+      service="http://appsy-daisy.appspot.com/privacy.html"
+      short-description="Please contact customer service at fake@gmail.com."/>
+
+   </DISPUTES-GROUP>
+   <STATEMENT>
+     <PURPOSE><admin/><develop/><pseudo-decision/></PURPOSE>
+     <RECIPIENT><ours/></RECIPIENT>
+
+     <RETENTION><indefinitely/></RETENTION>
+     <DATA-GROUP>
+       <DATA ref="#dynamic.cookies">
+         <CATEGORIES><preference/><navigation/></CATEGORIES>
+
+       </DATA>
+     </DATA-GROUP>
+   </STATEMENT>
+   <STATEMENT>
+     <PURPOSE><individual-decision required="opt-out"/></PURPOSE>
+
+     <RECIPIENT><ours/></RECIPIENT>
+     <RETENTION><stated-purpose/></RETENTION>
+     <DATA-GROUP>
+       <DATA ref="#user.name.given"/>
+       <DATA ref="#dynamic.cookies">
+
+         <CATEGORIES><preference/><uniqueid/></CATEGORIES>
+       </DATA>
+     </DATA-GROUP>
+   </STATEMENT>
+ </POLICY>
