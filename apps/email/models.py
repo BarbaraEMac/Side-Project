@@ -20,10 +20,11 @@ from util.consts import *
 #### Addresses ####
 ###################
 
-info = "fake@gmail.com"
-
 barbara = 'z4beth@gmail.com'
-from_addr = 'z4beth@gmail.com' #barbara
+
+info = barbara
+
+from_addr = barbara
 
 #####################
 #### Email Class ####

@@ -8,6 +8,7 @@ urlpatterns = [
     (r'/pinterest',             Pinterest),
     (r'/p/biller',              PinterestBiller),
     (r'/p/billing_callback',    PinterestBillingCallback),
+    (r'/p/billingcancelled',    PinterestBillingCancelled),
     (r'/p/welcome',             PinterestWelcome),
 ]
 

@@ -6,7 +6,7 @@ import sys
 from util.consts  import *
 
 def get_shopify_url( shopify_url ):
-    if shopify_url[:7] != 'http://':
+    if shopify_url[:7] != 'http://' and shopify_url[:8] != 'https://':
         shopify_url = 'http://%s' % shopify_url 
 
     if shopify_url.endswith( '/' ):

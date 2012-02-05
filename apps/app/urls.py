@@ -6,5 +6,5 @@ urlpatterns = [
     # Views
     
     # processes
-    (r'/a/webhook/uninstall/(.*)/', DoUninstallApp),
+    (r'/a/webhook/uninstall', DoUninstallApp),
 ]

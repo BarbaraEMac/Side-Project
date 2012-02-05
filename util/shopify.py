@@ -9,6 +9,7 @@ from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
+from util                 import httplib2
 from util.consts          import *
 from util.helpers         import generate_uuid
 from util.helpers         import url 
@@ -152,6 +153,7 @@ class ShopifyAPI():
         # Auth the http lib
         h.add_credentials(username, password)
         
+        logging.info('url %s' % url)
         resp, content = h.request(
                 url,
                 "POST",
@@ -159,12 +161,41 @@ class ShopifyAPI():
                 headers = header
             )
 
+        logging.info('%r %r' % (resp, content)) 
+        if int(resp.status) == 201:
+            data = json.loads ( content )['recurring_application_charge']
+            return data['confirmation_url']
+
         return ''
+
+    @staticmethod
+    def verify_recurring_charge( app, store_url, store_token, charge_id ):
+        """ Setup store with a recurring blling charge for htis app."""
+        url      = '%s/admin/recurring_application_charges/%s.json' % (store_url, charge_id)
+        
+        username = SHOPIFY_APPS[app]['api_key'] 
+        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        header   = {'content-type':'application/json'}
+        h        = httplib2.Http()
+        
+        # Auth the http lib
+        h.add_credentials(username, password)
+
+        logging.info("BARBAR %s" % url)
+        
+        resp, content = h.request(url, "GET", headers=header)
+        logging.info('%r %r' % (resp, content)) 
+        if int(resp.status) == 201 or int(resp.status) == 200:
+            data = json.loads ( content )['recurring_application_charge']
+            return data['status'] == 'accepted' or data['status'] == 'active'
+
+
+        return False
 
     @staticmethod
     def activate_recurring_charge( app, store_url, store_token, charge_id ):
         """ Setup store with a recurring blling charge for htis app."""
-        url      = '%s/admin/recurring_application_charges/#%s/activate.json' % (store_url, charge_id)
+        url      = '%s/admin/recurring_application_charges/%s/activate.json' % (store_url, charge_id)
         
         username = SHOPIFY_APPS[app]['api_key'] 
         password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
@@ -174,9 +205,18 @@ class ShopifyAPI():
         # Auth the http lib
         h.add_credentials(username, password)
         
-        resp, content = h.request(url, "POST", body=json.dumps(settings), headers=header)
+        settings = { "recurring_application_charge": {
+                        "id": charge_id,
+                        "name": app + '+', 
+                        "price" : 0.99 } 
+                   }
 
-        return ''
+        resp, content = h.request(url, "POST", body=json.dumps(settings), headers=header)
+        logging.info('%r %r' % (resp, content)) 
+        if int(resp.status) == 201 or int(resp.status) == 200:
+            return True #success
+
+        return False #failure
 
     @staticmethod
     def delete_recurring_charge( app, store_url, store_token, charge_id ):
@@ -191,7 +231,7 @@ class ShopifyAPI():
         # Auth the http lib
         h.add_credentials(username, password)
         
-        resp, content = h.request(url, "DELETE", body=json.dumps(settings), headers=header)
+        resp, content = h.request(url, "DELETE", headers=header)
 
         return ''
 

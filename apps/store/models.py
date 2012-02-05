@@ -1,13 +1,17 @@
 #!/usr/bin/python
 
+import hashlib
 import logging
 
+from django.utils         import simplejson as json
 from google.appengine.api   import memcache
 from google.appengine.ext   import db
 
+from util                   import httplib2
 from util.consts            import *
 from util.model             import Model
 from util.helpers           import generate_uuid
+from util.shopify_helpers import get_shopify_url
 
 # ------------------------------------------------------------------------------
 # ShopifyStore Class Definition ------------------------------------------------
@@ -23,7 +27,6 @@ class ShopifyStore( Model ):
     url     = db.LinkProperty  ( indexed = True )
     domain  = db.LinkProperty  ( indexed = True )
     token   = db.StringProperty( default = '' )
-    id      = db.StringProperty( indexed = True )
 
     # Owner Properties
     full_name = db.StringProperty( default = '', indexed = False )
@@ -53,7 +56,7 @@ class ShopifyStore( Model ):
     @staticmethod
     def create( url_, token, app_type ):
         url_ = get_shopify_url( url_ )
-        
+        logging.info('url :%s ' % url_)
         # Query the Shopify API to learn more about this store
         data = ShopifyStore.fetch_store_info( url_, token, app_type )
         
@@ -71,7 +74,6 @@ class ShopifyStore( Model ):
                               url      = url_,
                               domain   = domain,
                               token    = token,
-                              id       = str(data['id']),
                               full_name = data['shop_owner'])
         store.put()
 
@@ -86,7 +88,7 @@ class ShopifyStore( Model ):
         return store
 
     @staticmethod
-    def get_or_create( store_url, store_token='', app_type="" ):
+    def get_or_create( store_url, store_token, app_type ):
         store = ShopifyStore.get_by_url(store_url)
 
         if not store:

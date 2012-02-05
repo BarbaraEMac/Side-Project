@@ -1,41 +1,37 @@
 #!/usr/bin/python
 
-# The App Model
-
 import logging
 import random
 
 from google.appengine.api import memcache
-from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
 from util.consts          import *
-from util.helpers         import generate_uuid
-from util.helpers         import url 
 from util.model           import Model
+from util.shopify         import ShopifyAPI
 
 NUM_CLICK_SHARDS = 15
 
 class App(Model, polymodel.PolyModel):
     # Unique identifier for memcache and DB key
-    uuid      = db.StringProperty( required=True, indexed=True )
+    uuid        = db.StringProperty( required=True, indexed=True )
     
     # Datetime when this model was put into the DB
-    created   = db.DateTimeProperty( required= True, auto_now_add=True, indexed=False )
+    created     = db.DateTimeProperty( required= True, auto_now_add=True, indexed=False )
     
     # Person who created/installed this App
-    store     = db.ReferenceProperty( db.Model, required=True, collection_name='apps' )
+    store       = db.ReferenceProperty( db.Model, required=False, collection_name='apps' )
     
     # Defaults to None, only set if this App has been deleted
-    old_store = db.ReferenceProperty( db.Model, required=True, collection_name='deleted_apps' )
+    old_store   = db.ReferenceProperty( db.Model, required=False, collection_name='deleted_apps' )
     
     # Cached here so we don't need to fetch the 'store' Model
-    store_url   = db.StringProperty(required=True, indexed = False)
+    store_url   = db.StringProperty(required=True, indexed = True)
     store_token = db.StringProperty(required=True, indexed = False)
     
     # Shopify's billing charge id
-    charge_id = db.StringProperty(required=True, indexed = True)
+    charge_id   = db.StringProperty(required=True, indexed = True)
 
     # For Apps that use a click counter, this is the cached amount
     cached_clicks_count = db.IntegerProperty( default = 0, indexed=False )
@@ -47,6 +43,10 @@ class App(Model, polymodel.PolyModel):
     @staticmethod
     def _get_from_datastore(uuid):
         """Datastore retrieval using memcache_key"""
+        return App.all().filter('uuid =', uuid).get()
+
+    @staticmethod
+    def get_by_uuid( uuid ):
         return App.all().filter('uuid =', uuid).get()
 
     def validateSelf( self ):
@@ -93,7 +93,7 @@ class App(Model, polymodel.PolyModel):
         # Install the "App Uninstall" webhook
         data = {
             "webhook": {
-                "address": "%s/a/webhook/uninstall?u=" % (
+                "address": "%s/a/webhook/uninstall?u=%s" % (
                     URL,
                     self.uuid
                 ),
@@ -129,8 +129,8 @@ class App(Model, polymodel.PolyModel):
 
     def activate_recurring_billing(self):
         ShopifyAPI.activate_recurring_charge( self.class_name(), 
-                                              shopify_url, 
-                                              store_token, 
+                                              self.store_url, 
+                                              self.store_token,
                                               charge_id )
     
     def delete( self ):

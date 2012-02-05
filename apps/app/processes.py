@@ -10,7 +10,7 @@ from util.urihandler        import URIHandler
 from util.consts            import *
 
 class DoUninstallApp( URIHandler ):
-    def post(self, app_name):
+    def post(self):
         # Grab the ShopifyApp
         store_url = self.request.headers['X-Shopify-Shop-Domain']
         logging.info("store: %s " % store_url)

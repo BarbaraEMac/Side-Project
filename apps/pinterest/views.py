@@ -3,13 +3,16 @@
 import logging
 
 from apps.store.models     import ShopifyStore
-from apps.pinterest.models import Pinterest
 from apps.pinterest.models import get_pinterest_by_url
+from apps.pinterest.models import get_or_create_pinterest
+from apps.pinterest.models import create_pinterest
 
 from util.consts     import PINTEREST_APP
 from util.consts     import SHOPIFY_APPS
+from util.consts     import URL
 from util.helpers    import url
 from util.shopify    import ShopifyAPI
+from util.shopify_helpers import get_shopify_url
 from util.urihandler import URIHandler
 
 # The "Shows" ------------------------------------------------------------------
@@ -23,24 +26,31 @@ class PinterestBiller( URIHandler ):
     # Renders a app page
     def get(self):
         # Request varZ from Shopify
-        shopify_url  = self.request.get( 'shop' )
-        store_token  = self.request.get( 't' )
+        store_url   = get_shopify_url( self.request.get( 'shop' ) )
+        shopify_sig = self.request.get( 'signature' )
+        store_token = self.request.get( 't' )
 
         # If we've already set up the app, redirect to welcome screen
-        if get_pinterest_by_url( shopify_url ) != None:
+        if get_pinterest_by_url( store_url ) != None:
             self.redirect( url( 'PinterestWelcome' ) )
+            return
 
+        # Get the store or create a new one
+        store = ShopifyStore.get_or_create(store_url, store_token, PINTEREST_APP)
+        
         settings = {
             "recurring_application_charge": {
                 "price": 0.99,
                 "name": "Pinterest+",
-                "return_url": "%s/p/billing_callback?app_uuid=%s" % (URL, self.uuid)
+                'test' : True,
+                "return_url": "%s/p/billing_callback?s_u=%s" % (URL, store.uuid)
               }
         }  
 
         redirect_url = ShopifyAPI.recurring_billing( PINTEREST_APP, 
                                                      store_url, 
-                                                     store_token )
+                                                     store_token,
+                                                     settings )
         
         self.redirect( redirect_url )
 
@@ -48,29 +58,32 @@ class PinterestBiller( URIHandler ):
 class PinterestBillingCallback( URIHandler ):
     # Renders a app page
     def get(self):
-        charge_id  = self.request.get( 'charge_id' )
-
         # Request varZ from Shopify
-        shopify_url  = self.request.get( 'shop' )
-        shopify_sig  = self.request.get( 'signature' )
-        store_token  = self.request.get( 't' )
-
-        # Get the store or create a new one
-        store = ShopifyStore.get_or_create(shopify_url, store_token, self, app)
+        charge_id = self.request.get( 'charge_id' )
+        store     = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         
-        # Fetch or create the app
-        app    = Pinterest.get_or_create(store, token, charge_id)
-        
-        # Render the page
-        template_values = {
-            'app'        : app,
-            'shop_owner' : store.full_name,
-            'shop_name'  : store.name
-        }
+        if ShopifyAPI.verify_recurring_charge( PINTEREST_APP, store.url, store.token, charge_id ):
+            # Fetch or create the app
+            app    = get_or_create_pinterest(store, charge_id)
+            
+            # Render the page
+            template_values = {
+                'app'        : app,
+                'shop_owner' : store.full_name,
+                'shop_name'  : store.name
+            }
 
 
-        self.redirect( url('PinterestWelcome') )
+            self.redirect( url('PinterestWelcome') )
+        else:
+            self.redirect( url('PinterestBillingCancelled') )
 
+
+class PinterestBillingCancelled( URIHandler ):
+    def get( self ):
+        template_values = { }
+
+        self.response.out.write(self.render_page('cancelled.html', template_values)) 
 
 class PinterestWelcome( URIHandler ):
     def get( self ):
