@@ -9,6 +9,7 @@ from google.appengine.api import taskqueue
 from google.appengine.ext import db
 from google.appengine.ext.db import polymodel
 
+from apps.email.models      import Email
 from util                 import httplib2
 from util.consts          import *
 from util.helpers         import generate_uuid
@@ -76,7 +77,7 @@ class ShopifyAPI():
                 headers = header
             )
             logging.info('%r %r' % (resp, content))
-            if int(resp.status) == 401:
+            if int(resp.status) > 400:
                 Email.emailBarbara(
                     '%s SCRIPT_TAGS INSTALL FAILED\n%s\n%s' % (
                         app,
@@ -221,7 +222,7 @@ class ShopifyAPI():
     @staticmethod
     def delete_recurring_charge( app, store_url, store_token, charge_id ):
         """ Setup store with a recurring blling charge for htis app."""
-        url      = '%s/admin/recurring_application_charges/#%s.json' % (store_url, charge_id)
+        url      = '%s/admin/recurring_application_charges/%s.json' % (store_url, charge_id)
         
         username = SHOPIFY_APPS[app]['api_key'] 
         password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
@@ -232,8 +233,9 @@ class ShopifyAPI():
         h.add_credentials(username, password)
         
         resp, content = h.request(url, "DELETE", headers=header)
+        logging.info('Uninstall: %r %r' % (resp, content)) 
+        if int(resp.status) == 201 or int(resp.status) == 200:
+            return True #success
 
-        return ''
-
-
+        return False #failure
     

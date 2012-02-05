@@ -54,7 +54,7 @@ class Email():
 
         body = """<p></p>"""
         
-        Email.send_email(fraser, to_addr, subject, body)
+        Email.send_email(from_addr, to_addr, subject, body)
 
     @staticmethod 
     def template_path(path):

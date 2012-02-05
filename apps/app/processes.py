@@ -11,16 +11,19 @@ from util.consts            import *
 
 class DoUninstallApp( URIHandler ):
     def post(self):
-        # Grab the ShopifyApp
-        store_url = self.request.headers['X-Shopify-Shop-Domain']
-        logging.info("store: %s " % store_url)
-        app = App.get_by_uuid( self.request.get('u') )
-        
-        Email.emailBarbara("UNinstall app: %s\n%r %s" % (
-                app.class_name(),
-                self.request, 
-                self.request.headers
+        try:
+            # Grab the ShopifyApp
+            store_url = self.request.headers['X-Shopify-Shop-Domain']
+            logging.info("store: %s " % store_url)
+            app = App.get_by_uuid( self.request.get('u') )
+            
+            Email.emailBarbara("UNinstall app: %s\n%r %s" % (
+                    app.class_name(),
+                    self.request, 
+                    self.request.headers
+                )
             )
-        )
 
-        app.delete()
+            app.delete()
+        except:
+            return

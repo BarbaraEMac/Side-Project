@@ -122,23 +122,25 @@ class App(Model, polymodel.PolyModel):
         if assets == None:
             assets = []
 
-        ShopifyAPI.install_script_tags( self.class_name(), 
-                                        self.store_url, 
-                                        self.store_token,
-                                        assets )
+        ShopifyAPI.install_assets( self.class_name(), 
+                                   self.store_url, 
+                                   self.store_token,
+                                   assets )
 
     def activate_recurring_billing(self):
         ShopifyAPI.activate_recurring_charge( self.class_name(), 
                                               self.store_url, 
                                               self.store_token,
-                                              charge_id )
+                                              self.charge_id )
     
     def delete( self ):
         # Turn off billing
+        """
         ShopifyAPI.delete_recurring_charge( self.class_name(),
                                             self.store_url,
                                             self.store_token,
                                             self.charge_id )
+        """
         # Mark App as 'deleted'
         self.old_store = self.store
         self.store     = None

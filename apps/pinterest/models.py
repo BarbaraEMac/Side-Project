@@ -18,19 +18,53 @@ class Pinterest(App):
     
     def do_install( self ):
         # Define our script tag 
-        tags = [{
-            "script_tag": {
-                "src": "%s/b/shopify/load/buttons.js?app_uuid=%s" % (
-                    URL,
-                    self.uuid
-                ),
-                "event": "onload"
+        pinterest_script = """
+    <!-- START Pinterest Script -->
+    <script type="text/javascript">
+    (function() {
+        window.PinIt = window.PinIt || { loaded:false };
+        if (window.PinIt.loaded) return;
+        window.PinIt.loaded = true;
+        function async_load(){
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.async = true;
+            if (window.location.protocol == "https:")
+                s.src = "https://assets.pinterest.com/js/pinit.js";
+            else
+                s.src = "http://assets.pinterest.com/js/pinit.js";
+            var x = document.getElementsByTagName("script")[0];
+            x.parentNode.insertBefore(s, x);
+        }
+        if (window.attachEvent)
+            window.attachEvent("onload", async_load);
+        else
+            window.addEventListener("load", async_load, false);
+    })();
+    </script>
+    <!-- END Pinterest Script -->
+    """
+
+        pinterest_button = """<a href="http://pinterest.com/pin/create/button/?url={{product.url|escape}}&media={{shop.url|escape}}/{{product.featured_image|escape}}&description=Found%20on%20{{shop.url|escape}}!" class="pin-it-button" count-layout="horizontal">Pin It</a>"""
+            
+        appsy_script = """
+    var script = window.document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "%s/%s";
+    window.document.getElementsByTagName("head")[0].appendChild(script);""" % (URL, '/static/js/pinterest.js')
+
+        snippet = pinterest_script + pinterest_button + appsy_script
+
+        liquid_assets = [{
+            'asset': {
+                'value': snippet,
+                'key': 'snippets/pinterest_plus.liquid'
             }
         }]
 
         # Install yourself in the Shopify store
         self.install_webhooks( webhooks = None )
-        self.install_script_tags( script_tags = tags )
+        self.install_assets( assets = liquid_assets )
         
         self.activate_recurring_billing( )
 
