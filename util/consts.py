@@ -28,8 +28,8 @@ PINTEREST_APP = 'Pinterest'
 
 SHOPIFY_APPS = {
     PINTEREST_APP : {
-        'api_key': '',
-        'api_secret': '',
+        'api_key': '59e10853ab982de91a47040b987ec12b',
+        'api_secret': '7963fdddf3eaa572fe482b28295c63af',
         'class_name': 'Pinterest',
     }
 }

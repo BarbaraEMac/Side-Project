@@ -4,7 +4,7 @@
     <script>
         var install_url = function() {
             var url = document.getElementById( 'input_url' ).value;
-            window.location = 'https://' + url + '/admin/api/auth?api_key={{SHOPIFY_API_KEY}}'; 
+            window.location = 'https://' + url + '/admin/api/auth?api_key={{API_KEY}}'; 
         };
     </script>
 {% endblock head %}
@@ -29,7 +29,6 @@
             To install, simply enter your store's URL / domain: <input type="text" id="input_url" value="Your store URL" />
             <button onclick="install_url();">Install Now</button>
         </div>
-
     </div>
 {% endblock content %}
 

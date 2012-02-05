@@ -49,18 +49,6 @@ class App(Model, polymodel.PolyModel):
         """Datastore retrieval using memcache_key"""
         return App.all().filter('uuid =', uuid).get()
 
-    @staticmethod
-    def get_by_uuid( uuid ):
-        return App.all().filter('uuid =', uuid).get()
-
-    @staticmethod
-    def get_by_store( store ):
-        return App.all().filter('store =', store).get()
-
-    @staticmethod
-    def get_by_url( store_url ):
-        return App.all().filter('store_url =', store_url).get()
-
     def validateSelf( self ):
         # Subclasses should override this
         return

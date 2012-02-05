@@ -4,8 +4,10 @@ import logging
 
 from apps.store.models     import ShopifyStore
 from apps.pinterest.models import Pinterest
+from apps.pinterest.models import get_pinterest_by_url
 
 from util.consts     import PINTEREST_APP
+from util.consts     import SHOPIFY_APPS
 from util.helpers    import url
 from util.shopify    import ShopifyAPI
 from util.urihandler import URIHandler
@@ -13,7 +15,7 @@ from util.urihandler import URIHandler
 # The "Shows" ------------------------------------------------------------------
 class Pinterest( URIHandler ):
     def get( self ):
-        template_values = { }
+        template_values = { 'API_KEY' : SHOPIFY_APPS[PINTEREST_APP]['api_key'] }
 
         self.response.out.write(self.render_page('pinterest.html', template_values)) 
 
@@ -25,7 +27,7 @@ class PinterestBiller( URIHandler ):
         store_token  = self.request.get( 't' )
 
         # If we've already set up the app, redirect to welcome screen
-        if Pinterest.get_by_url( shopify_url ):
+        if get_pinterest_by_url( shopify_url ) != None:
             self.redirect( url( 'PinterestWelcome' ) )
 
         settings = {

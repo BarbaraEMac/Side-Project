@@ -3,33 +3,18 @@
 from google.appengine.ext import db
 from apps.app.models      import App
 
+
+from apps.email.models import Email
 # ------------------------------------------------------------------------------
 # Pinterest Class Definition ---------------------------------------------------
 # ------------------------------------------------------------------------------
 class Pinterest(App):
-    """ShopifyStores install the Pinterest App"""  
-
     def __init__(self, *args, **kwargs):
         """ Initialize this model """
         super(Pinterest, self).__init__(*args, **kwargs)
-
-    # Constructor ------------------------------------------------------------------
-    @staticmethod
-    def create(store, token, charge_id):
-
-        uuid = generate_uuid( 16 )
-        app  = Pinterest( key_name    = uuid,
-                          uuid        = uuid,
-                          store       = store,
-                          store_name  = store.name, # Store name
-                          store_url   = store.url,  # Store url
-                          store_token = token,
-                          charge_id   = charge_id ) 
-        app.put()
-
-        app.do_install()
-            
-        return app
+    
+    def get_pinterest_by_url( url ):
+        return Pinterest.all().filter('store_url = ', url).get()
 
     def do_install( self ):
         # Define our script tag 
@@ -63,6 +48,23 @@ class Pinterest(App):
             )
         )
 
+    # Constructor --------------------------------------------------------------
+    @staticmethod
+    def create(store, token, charge_id):
+
+        uuid = generate_uuid( 16 )
+        app  = Pinterest( key_name    = uuid,
+                          uuid        = uuid,
+                          store       = store,
+                          store_name  = store.name, # Store name
+                          store_url   = store.url,  # Store url
+                          store_token = token,
+                          charge_id   = charge_id ) 
+        app.put()
+
+        app.do_install()
+            
+        return app
     # Accessors ----------------------------------------------------------------
     @staticmethod
     def get_or_create( store, token ):
@@ -90,4 +92,6 @@ class Pinterest(App):
                 except:
                     logging.error('encountered error with reinstall', exc_info=True)
         return app
+
+
 
