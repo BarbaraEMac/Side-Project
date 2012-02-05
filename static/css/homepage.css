@@ -31,8 +31,8 @@ a {
 }
 
 .landing_app {
-    width: 210px;
-    margin-bottom: 30px;
+    width: 275px;
+    margin-bottom: 60px;
 
     float: left;
 
@@ -45,21 +45,22 @@ a {
 }
 
 .app_margin {
-    margin-right: 75px;
+    margin-right: 19px;
 }
 
 .app_img {
-    padding: 5px;
-    width: 200px;
-    height: 150px;
-    margin-right: auto;
-    margin-left: auto;
+    padding: 0px;
+    width: 275px;
+    height: 89px;
+    max-width: 275px;
+    max-height: 89px;
 }
 .app_img img {
-    max-width: 200px;
-    max-height: 73px;
-    margin-top: auto;
+    max-width: 275px;
+    max-height: 89px;
+    margin-right: auto;
     margin-left: auto;
+    display: block;
 }
 
 .app_text {
