@@ -5,52 +5,38 @@ import inspect
 
 from google.appengine.ext        import webapp
 from google.appengine.ext.webapp import template
+from google.appengine.ext.webapp.util import run_wsgi_app
 
-from apps.client.models import get_client_by_email
+from apps.store.models  import ShopifyStore
+
 from util.consts        import *
-from util.gaesessions   import get_current_session
 from util.templates     import render 
 
 class URIHandler( webapp.RequestHandler ):
 
     def __init__(self):
-        # For simple caching purposes. Do not directly access this. Use self.get_client() instead.
+        # For simple caching purposes. Do not directly access this. Use self.get_store() instead.
         try:
             self.response.headers.add_header('P3P', P3P_HEADER)
         except:
             pass
-        self.db_client = None
+        self.db_store = None
 
     # Return None if not authenticated.
-    # Otherwise return db instance of client.
-    def get_client(self):
-        if self.db_client:
-            return self.db_client
+    # Otherwise return db instance of store.
+    def get_store(self):
+        if self.db_store:
+            return self.db_store
 
-        session = get_current_session()
-        session.regenerate_id()
-        email   = session.get('email', '')
-        logging.info("GETTING EMAIL: %s" % email)
-        
-        self.db_client = get_client_by_email( email )
-        
-        logging.debug ("self.db_client = (%s) %s" % (type (self.db_client), self.db_client))
-            
-        if not self.db_client:
-            pass
-
-        return self.db_client
+        return self.db_store
     
     def render_page(self, template_file_name, content_template_values, template_path=None):
         """This re-renders the full page with the specified template."""
-        client = self.get_client()
+        store = self.get_store()
 
         template_values = {
-            'login_url'  : '/client/login',
-            'logout_url' : '/client/logout',
-            'URL'        : URL,
-            'NAME'       : NAME,
-            'client'     : client
+            'URL'   : URL,
+            'store' : store
         }
         merged_values = dict(template_values)
         merged_values.update(content_template_values)
@@ -58,7 +44,6 @@ class URIHandler( webapp.RequestHandler ):
         path = os.path.join('templates/', template_file_name)
         
         app_path = self.get_app_path()
-        
 
         if template_path != None:
             logging.info('got template_path: %s' % template_path)
@@ -69,13 +54,12 @@ class URIHandler( webapp.RequestHandler ):
         logging.info("Rendering %s" % path )
         self.response.headers.add_header('P3P', P3P_HEADER)
         return render(path, merged_values)
-        #return template.render(path, merged_values)
 
     def get_app_path(self):
         module = inspect.getmodule(self).__name__
         parts = module.split('.')
         app_path = None 
-
+        
         if len(parts) > 2:
             if parts[0] == 'apps':
                 # we have an app

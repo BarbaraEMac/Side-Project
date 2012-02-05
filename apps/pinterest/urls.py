@@ -1,7 +1,13 @@
 #!/usr/bin/env python
-from apps.buttons.processes import *
-from apps.buttons.views import *
+
+from apps.pinterest.processes import *
+from apps.pinterest.views import *
 
 urlpatterns = [
+    # Views
+    (r'/p',                     Pinterest),
+    (r'/p/biller',              PinterestBiller),
+    (r'/p/billing_callback',    PinterestBillingCallback),
+    (r'/p/welcome',             PinterestWelcome),
 ]
 

@@ -24,13 +24,30 @@ P3P_HEADER = 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND C
 # LilCookies (secure cookies) Stuff
 COOKIE_SECRET = 'f54eb793d727492e99601446aa9b06bab504c3d37bc54c8391f385f0dde03732'
 
+PINTEREST_APP = 'Pinterest'
+
 SHOPIFY_APPS = {
-    'Pinterest': {
+    PINTEREST_APP : {
         'api_key': '',
         'api_secret': '',
         'class_name': 'Pinterest',
     }
 }
+
+# controls the number of memcache buckets
+# and the maximum length of a bucket before it gets put to datastore
+NUM_ACTIONS_MEMCACHE_BUCKETS = 20
+MEMCACHE_BUCKET_COUNTS = {
+    'default': 20,
+    '_willet_actions_bucket': 25,
+    '_willet_user_ips_bucket': 20,
+    '_willet_user_put_bucket': 20,
+}
+
+# number of seconds to memcache an item
+# see: http://stackoverflow.com/questions/2793366/what-is-the-maximum-length-in-seconds-to-store-a-value-in-memcache
+# TODO: Try 2591999 instead
+MEMCACHE_TIMEOUT = 1728000
 
 # List of root template directories
 # to import templates from

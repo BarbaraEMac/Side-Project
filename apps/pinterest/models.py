@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from google.appengine.ext import db
-
 from apps.app.models      import App
 
 # ------------------------------------------------------------------------------
@@ -16,21 +15,21 @@ class Pinterest(App):
 
     # Constructor ------------------------------------------------------------------
     @staticmethod
-    def create(store, app_token):
+    def create(store, token, charge_id):
 
         uuid = generate_uuid( 16 )
-        app = ButtonsShopify( key_name    = uuid,
-                              uuid        = uuid,
-                              store       = store,
-                              store_name  = store.name, # Store name
-                              store_url   = store.url, # Store url
-                              store_token = app_token ) 
+        app  = Pinterest( key_name    = uuid,
+                          uuid        = uuid,
+                          store       = store,
+                          store_name  = store.name, # Store name
+                          store_url   = store.url,  # Store url
+                          store_token = token,
+                          charge_id   = charge_id ) 
         app.put()
 
         app.do_install()
             
         return app
-
 
     def do_install( self ):
         # Define our script tag 
@@ -45,21 +44,22 @@ class Pinterest(App):
         }]
 
         # Install yourself in the Shopify store
-        self.install_webhooks( product_hooks_too = False )
+        self.install_webhooks( webhooks = None )
         self.install_script_tags( script_tags = tags )
+        
+        self.activate_recurring_billing( )
 
-        # Fire off "personal" email from Fraser
-        Email.welcomeClient( "Pinterest+", 
-                             self.store.merchant.get_attr('email'), 
-                             self.store.merchant.get_full_name(), 
-                             self.store.name )
+        Email.welcomeClient( self.class_name(), 
+                             self.store.email, 
+                             self.store.full_name, 
+                             self.store_name )
         
         # Email Barbara
         Email.emailBarbara(
-            'ButtonsShopify Install: %s %s %s' % (
+            'Pinterest Install: %s %s %s' % (
                 self.uuid,
-                self.store.name,
-                self.store.url
+                self.store_name,
+                self.store_url
             )
         )
 
@@ -90,5 +90,4 @@ class Pinterest(App):
                 except:
                     logging.error('encountered error with reinstall', exc_info=True)
         return app
-
 

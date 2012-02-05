@@ -15,12 +15,15 @@
         <!--[if IE]><link rel="stylesheet" href="blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
 
         <!-- CSS -->
-        <link rel="stylesheet" href="/static/css/style.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="/static/css/common.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="/static/css/homepage.css" type="text/css" media="screen" />
         {% block head %}{% endblock head %}
+
 	</head>
 	<body>
+        
         <div id='wrap'>
-            <div id='main' class='container'>
+            <div id='main' class='lower-50 container'>
                 <div class="span-24 append-bottom last">
                     {% block content %}
                     {% endblock content %}
@@ -31,6 +34,6 @@
                 </div>
             </div>
         </div>
-        <!-- END CONTENT -->
-	</body>
+	
+    </body>
 </html>

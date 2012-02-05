@@ -1,9 +1,8 @@
 #!/usr/bin/env python
-from apps.client.processes import *
-from apps.client.views import *
+
+from apps.store.processes import *
+from apps.store.views import *
 
 urlpatterns = [
-    (r'/client/fetch', FetchShopifyProducts)
-
 
 ]

@@ -10,8 +10,6 @@ from google.appengine.ext import webapp
 from util.consts  import *
 from util.cookies import LilCookies
 
-
-
 def to_dict(something, recursion=0):
     import datetime
     import time
@@ -165,27 +163,9 @@ def set_visited_cookie(headers):
     headers['Set-Cookie'] = appCookie.output()
 
 # Decorators
-def login_required( fn ):
-    def check(self, param=None):
-        client = self.get_client()
-
-        if client: 
-            fn(self, client)
-        else:
-            self.redirect ( '/login?u=%s' % self.request.url )
-
-    return check
-
 def admin_required( fn ):
     def check(self, param=None):
-        from apps.user.models import User
-        user = User.get(read_user_cookie(self))
-
-        if not user.is_admin():
-            self.redirect ( '/' )
-            return
-        else:   
-            fn( self, param )
+        fn( self, param )
     return check
 
 #
