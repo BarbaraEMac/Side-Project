@@ -5,7 +5,7 @@ import logging
 from util.urihandler import URIHandler
 
 # The "Shows" ------------------------------------------------------------------
-class Gplus( URIHandler ):
+class GPlus( URIHandler ):
     def get( self ):
         template_values = { }
 

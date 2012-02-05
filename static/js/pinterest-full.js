@@ -10,44 +10,47 @@ var AppsyDaisy_waitForPinterest = function() {
     }
     
     if ( runFlag ) {
-        AppsyDaisy_run();
+        AppsyDaisy_waitForJquery();
     } else {
         window.setTimeout(AppsyDaisy_waitForPinterest, 100);
     }
 };
 
+var AppsyDaisy_waitForJquery = function() {
+    if ( typeof jQuery != 'function' ) {
+        window.setTimeout(AppsyDaisy_waitForJquery, 100);
+    } else {
+        AppsyDaisy_run();
+    }
+}
+
 var AppsyDaisy_run = function() {
-    var here = window.location.href;
     var btn  = document.getElementById( 'AppsyPinterest' );
     var children = btn.childNodes;
     var pinterest_iframe = null;
+    var inIframe = false;
 
     for ( var i = 0; i < children.length; i ++ ) {
         if( children[i].tagName === "IFRAME" ) {
-            pinterest_iframe = children[i];
+            pinterest_iframe = $(children[i]);
         }
     }
 
-    var our_iframe = document.createElement( 'img' );
-    our_iframe.id = 'AppsyDaisyPinterestImg';
-    our_iframe.style.cursor = 'pointer';
-    our_iframe.style.width  = '100%';
-    our_iframe.style.height = '100%';
-    our_iframe.style.position = 'absolute';
-    our_iframe.style.top = '0px';
-    our_iframe.style.left = '0px';
-    our_iframe.style.zIndex = '2147483647';
-    our_iframe.src = 'http://appsy-daisy.appspot.com/static/imgs/noimage.png';
-    our_iframe.onclick = function() { AppsyDaisy_handleClick(); };
-    our_iframe.onClick = function() { AppsyDaisy_handleClick(); };
-
-    btn.appendChild( our_iframe );
+    pinterest_iframe
+        .bind('mouseover', function(){
+          //console.log('entered iframe');
+          inIframe = true;
+          setTimeout(function() { 
+            if ( inIframe ) { AppsyDaisy_handleClick(); }
+          }, 900);
+        })
+        .bind('mouseout', function(){
+          //console.log('left iframe');
+          inIframe = false;
+        });
 };
 
 var AppsyDaisy_handleClick = function(){
-    var img  = document.getElementById( 'AppsyDaisyPinterestImg' );
-    document.body.appendChild( img );
-
     var iframe = document.createElement( 'iframe' );
     iframe.style.display = 'none';
     iframe.src = "http://appsy-daisy.appspot.com/p/click?url=" + encodeURIComponent( window.location.href );
