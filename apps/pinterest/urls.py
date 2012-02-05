@@ -5,7 +5,7 @@ from apps.pinterest.views import *
 
 urlpatterns = [
     # Views
-    (r'/p',                     Pinterest),
+    (r'/pinterest',             Pinterest),
     (r'/p/biller',              PinterestBiller),
     (r'/p/billing_callback',    PinterestBillingCallback),
     (r'/p/welcome',             PinterestWelcome),

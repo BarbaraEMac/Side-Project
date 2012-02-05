@@ -4,6 +4,6 @@ from apps.want.views import *
 
 urlpatterns = [
     # Views
-    (r'/w', Want),
+    (r'/want', Want),
 ]
 

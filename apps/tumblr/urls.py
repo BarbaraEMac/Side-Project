@@ -4,6 +4,6 @@ from apps.tumblr.views import *
 
 urlpatterns = [
     # Views
-    (r'/tu', Tumblr),
+    (r'/tumblr', Tumblr),
 ]
 

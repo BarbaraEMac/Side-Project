@@ -4,6 +4,6 @@ from apps.svpply.views import *
 
 urlpatterns = [
     # Views
-    (r'/s', Svpply),
+    (r'/svpply', Svpply),
 ]
 

@@ -4,6 +4,6 @@ from apps.twitter.views import *
 
 urlpatterns = [
     # Views
-    (r'/t', Twitter),
+    (r'/twitter', Twitter),
 ]
 

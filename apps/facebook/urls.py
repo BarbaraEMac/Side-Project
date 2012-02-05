@@ -4,6 +4,6 @@ from apps.facebook.views import *
 
 urlpatterns = [
     # Views
-    (r'/fb', Facebook),
+    (r'/facebook', Facebook),
 ]
 

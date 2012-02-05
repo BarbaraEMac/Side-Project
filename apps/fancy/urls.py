@@ -4,6 +4,6 @@ from apps.fancy.views import *
 
 urlpatterns = [
     # Views
-    (r'/f',                     Fancy),
+    (r'/fancy',  Fancy),
 ]
 
