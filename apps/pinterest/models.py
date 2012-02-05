@@ -45,13 +45,16 @@ class Pinterest(App):
     <!-- END Pinterest Script -->
     """
 
-        pinterest_button = """<a href="http://pinterest.com/pin/create/button/?url={{product.url|escape}}&media={{shop.url|escape}}/{{product.featured_image|escape}}&description=Found%20on%20{{shop.url|escape}}!" class="pin-it-button" count-layout="horizontal">Pin It</a>"""
-            
+        pinterest_button = """
+    <a href="http://pinterest.com/pin/create/button/?url={{shop.url|escape}}{{product.url|escape}}&media={{product.featured_image|product_img_url:'large'}}&description=Found%20on%20url={{shop.url|escape}}!" class="pin-it-button" count-layout="horizontal">Pin It</a>
+"""
         appsy_script = """
-    var script = window.document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "%s/%s";
-    window.document.getElementsByTagName("head")[0].appendChild(script);""" % (URL, '/static/js/pinterest.js')
+    <script>
+        var script = window.document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "%s/%s";
+        window.document.getElementsByTagName("head")[0].appendChild(script);
+    </script>""" % (URL, '/static/js/pinterest.js')
 
         snippet = pinterest_script + pinterest_button + appsy_script
 
