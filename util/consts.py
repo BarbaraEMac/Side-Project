@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'fancy',
     'gae_bingo',
     'gae_bingo.tests',
+    'gplus',
     'homepage',
     'pinterest',
     'store',
