@@ -1,16 +1,3 @@
-var waitForPinterest = function() {
-    var btn = document.getElementById( 'PinItButton' );
-
-    if ( !btn ) {
-        window.setTimeout(waitForPinterest,100);
-    } else {
-        run();
-    }
-};
-
-var run = function() {
-    alert('running');
-    var here = window.location.href;
-
-
-};
+function d(){for(var b=document.getElementById("AppsyPinterest").childNodes,a=!1,c=0;c<b.length;c++)"IFRAME"===b[c].tagName&&(a=!0);a?e():window.setTimeout(d,100)}
+function e(){for(var b=document.getElementById("AppsyPinterest"),a=b.childNodes,c=0;c<a.length;c++);a=document.createElement("img");a.id="AppsyDaisyPinterestImg";a.style.cursor="pointer";a.style.width="100%";a.style.height="100%";a.style.position="absolute";a.style.top="0px";a.style.left="0px";a.style.zIndex="2147483647";a.src="http://appsy-daisy.appspot.com/static/imgs/noimage.png";a.onclick=function(){f()};a.a=function(){f()};b.appendChild(a)}
+function f(){document.body.appendChild(document.getElementById("AppsyDaisyPinterestImg"));var b=document.createElement("iframe");b.style.display="none";b.src="http://appsy-daisy.appspot.com/p/click?url="+encodeURIComponent(window.location.href);document.body.appendChild(b)}d();

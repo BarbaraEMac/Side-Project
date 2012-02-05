@@ -52,7 +52,7 @@ class Pinterest(App):
     <script>
         var script = window.document.createElement("script");
         script.type = "text/javascript";
-        script.src = "%s/%s";
+        script.src = "%s%s";
         window.document.getElementsByTagName("head")[0].appendChild(script);
     </script>""" % (URL, '/static/js/pinterest.js')
 

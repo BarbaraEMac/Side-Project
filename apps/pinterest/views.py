@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import logging
+from urlparse              import urlparse
+
 
 from apps.store.models     import ShopifyStore
 from apps.pinterest.models import get_pinterest_by_url
@@ -90,3 +92,12 @@ class PinterestWelcome( URIHandler ):
         template_values = { }
 
         self.response.out.write(self.render_page('welcome.html', template_values)) 
+
+class PinterestClick( URIHandler ):
+    def get( self ):
+        page_url  = urlparse( self.request.get( 'url' ) )
+        domain    = "%s://%s" % (page_url.scheme, page_url.netloc)
+        store_url = get_shopify_url( domain )
+
+        app = get_pinterest_by_url( store_url )
+        app.increment_clicks()
