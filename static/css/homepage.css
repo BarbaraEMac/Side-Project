@@ -12,6 +12,17 @@ body {
 
 }
 
+a {
+    text-decoration: none;
+    cursor: pointer;
+    color: #666;
+}
+
+#main {
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
 .container {
     background: white;
     border-radius: 10px;
@@ -19,12 +30,6 @@ body {
     -moz-box-shadow:    inset 0 0 10px #000000;
     -webkit-box-shadow: inset 0 0 10px #000000;
     box-shadow:         inset 0 0 10px #000000;
-}
-
-a {
-    text-decoration: none;
-    cursor: pointer;
-    color: #666;
 }
 
 .landing_app {
