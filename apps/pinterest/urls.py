@@ -5,12 +5,12 @@ from apps.pinterest.views import *
 
 urlpatterns = [
     # Views
-    (r'/pinterest',             Pinterest),
-    (r'/p/biller',              PinterestBiller),
-    (r'/p/billing_callback',    PinterestBillingCallback),
-    (r'/p/billingcancelled',    PinterestBillingCancelled),
-    (r'/p/welcome',             PinterestWelcome),
-    (r'/p/click',               PinterestClick),
+    (r'/pinterest',                     Pinterest),
+    (r'/pinterest/biller',              PinterestBiller),
+    (r'/pinterest/billing_callback',    PinterestBillingCallback),
+    (r'/pinterest/billingcancelled',    PinterestBillingCancelled),
+    (r'/pinterest/welcome',             PinterestWelcome),
+    (r'/pinterest/click',               PinterestClick),
 
 ]
 

@@ -18,8 +18,7 @@ class Pinterest(App):
     
     def do_install( self ):
         # Define our script tag 
-        pinterest_script = """
-    <!-- START Pinterest Script -->
+        pinterest_script = """<!-- START Pinterest Script -->
     <script type="text/javascript">
     (function() {
         window.PinIt = window.PinIt || { loaded:false };
@@ -42,18 +41,25 @@ class Pinterest(App):
             window.addEventListener("load", async_load, false);
     })();
     </script>
-    <!-- END Pinterest Script -->
     """
 
-        pinterest_button = """<div style="position: static; float: left;"><div id="AppsyPinterest" style="width: 110px; height: 26px; position:absolute;"><a href="http://pinterest.com/pin/create/button/?url={{shop.url|escape}}{{product.url|escape}}&media={{product.featured_image|product_img_url:'large'}}&description=Found%20on%20url={{shop.url|escape}}!" class="pin-it-button" count-layout="horizontal">Pin It</a></div></div> """
+        pinterest_button = """<div id="AppsyPinterest"><a href="http://pinterest.com/pin/create/button/?url={{shop.url|escape}}{{product.url|escape}}&media={{product.featured_image|product_img_url:'large'}}&description=Found%20on%20url={{shop.url|escape}}!" class="pin-it-button" count-layout="horizontal">Pin It</a></div>"""
         
         appsy_script = """
     <script>
+        if ( typeof jQuery != 'function' ) {
+            var script = window.document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js";
+            window.document.getElementsByTagName("head")[0].appendChild(script);
+        }
+
         var script = window.document.createElement("script");
         script.type = "text/javascript";
         script.src = "%s%s";
         window.document.getElementsByTagName("head")[0].appendChild(script);
-    </script>""" % (URL, '/static/js/pinterest.js')
+    </script>
+<!-- END Pinterest Script -->""" % (URL, '/static/js/pinterest.js')
 
         snippet = pinterest_script + pinterest_button + appsy_script
 
