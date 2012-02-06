@@ -54,6 +54,7 @@ class PinterestBiller( URIHandler ):
                                                      store_token,
                                                      settings )
         
+        self.db_client = store
         self.redirect( redirect_url )
 
 
@@ -64,7 +65,10 @@ class PinterestBillingCallback( URIHandler ):
         charge_id = self.request.get( 'charge_id' )
         store     = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         
-        if ShopifyAPI.verify_recurring_charge( PINTEREST_APP, store.url, store.token, charge_id ):
+        if ShopifyAPI.verify_recurring_charge( PINTEREST_APP, 
+                                               store.url, 
+                                               store.token, 
+                                               charge_id ):
             # Fetch or create the app
             app    = get_or_create_pinterest(store, charge_id)
             
@@ -75,21 +79,22 @@ class PinterestBillingCallback( URIHandler ):
                 'shop_name'  : store.name
             }
 
-
-            self.redirect( url('PinterestWelcome') )
+            self.redirect( "%s?s_u=%s" % (url('PinterestWelcome'), store.uuid))
         else:
-            self.redirect( url('PinterestBillingCancelled') )
+            self.redirect( "%s?s_u=%s" % (url('PinterestBillingCancelled'), store.uuid) )
 
 
 class PinterestBillingCancelled( URIHandler ):
     def get( self ):
+        store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         template_values = { }
 
         self.response.out.write(self.render_page('cancelled.html', template_values)) 
 
 class PinterestWelcome( URIHandler ):
     def get( self ):
-        template_values = { }
+        store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
+        template_values = { 'store' : store }
 
         self.response.out.write(self.render_page('welcome.html', template_values)) 
 

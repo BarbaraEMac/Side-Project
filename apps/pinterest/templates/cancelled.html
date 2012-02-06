@@ -1,12 +1,6 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <script>
-        var install_url = function() {
-            var url = document.getElementById( 'input_url' ).value;
-            window.location = 'https://' + url + '/admin/api/auth?api_key={{API_KEY}}'; 
-        };
-    </script>
 {% endblock head %}
 
 {% block content %}
@@ -26,7 +20,7 @@
         <div class="span-8 last">
             <div class="center">
                 <button style="font-size: 18px; font-weight: bold">
-                    <a href="{{app.store_url}}/admin">Return to your Store</a>
+                    <a href="{{store.url}}/admin">Return to your Store</a>
                 </button>
             </div>
         </div>

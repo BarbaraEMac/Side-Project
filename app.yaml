@@ -1,9 +1,9 @@
 application: appsy-daisy
 
-version: 1
+version: 2
 runtime: python
 api_version: 1
-default_expiration: "30d" # expiration time for static content
+default_expiration: "1d" # expiration time for static content
 
 builtins:
 - deferred: on

@@ -13,18 +13,18 @@
         <div class="lower-50 prepend-5 span-4 append-2 append-bottom" style="font-size: 1.5em; font-weight: bold; opacity: 0.6;"> 1. Register Store </div>
         <div class="lower-50 prepend-3 span-6 append-1 append-bottom" style="font-size: 1.5em; font-weight: bold;"> 2. Complete Installation </div>
         
-        <h1 class="span-24 last center">Installation Guide for {{shop_name}}</h1>
+        <h1 class="span-24 last center">Installation Guide for {{store.name}}</h1>
         <div class="span-24 last">
             <div class="center span-24 last append-bottom">
                 <p>
-                    {{shop_owner}}, thanks for installing "Pinterest+"!  
+                    {{store.full_name}}, thanks for installing "Pinterest+"!  
                     <br />
                     Now, let's determine where to place the button on your product pages.
                 </p>
             </div>
 
             <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
-                <p>1. In your <button><a target="_blank" href="{{app.store_url}}/admin">Shopify administration panel</a></button>, open the <em>Template Editor</em> under <em>Themes</em>.</p>
+                <p>1. In your <button><a target="_blank" href="{{store.url}}/admin">Shopify administration panel</a></button>, open the <em>Template Editor</em> under <em>Themes</em>.</p>
                 
                 <img class="span-18" src="/static/imgs/template_editor.png" />
             </div>
@@ -85,7 +85,7 @@
             <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
                 <div class="center">
                     <button style="font-size: 18px; font-weight: bold">
-                        <a href="{{app.store_url}}/admin">Return to your Store</a>
+                        <a href="{{store.url}}/admin">Return to your Store</a>
                     </button>
                 </div>
             </div>
