@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'email',
     'facebook',
     'fancy',
+    'feedback',
     'gae_bingo',
     'gae_bingo.tests',
     'gplus',

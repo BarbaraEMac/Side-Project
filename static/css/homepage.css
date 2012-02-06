@@ -8,10 +8,16 @@ body {
     background-image: url('/static/imgs/background.gif');
     font-family: 'helvetica neue', arial, sans-serif;
     text-shadow: white 0px 1px 0px;
-
-
 }
-
+#left_header {
+    position: absolute;
+    top: 7px;
+    left: 124px;
+}
+#left_header img {
+    height: 35px;
+    border-radius: 5px;
+}
 #right_header {
     position: absolute;
     top: 7px;

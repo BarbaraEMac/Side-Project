@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script>
+        var submit = function() {
+
+            $.ajax({ type: "POST",
+                     url: '/feedback/post',
+                     data: { email: $("#email").val(),
+                             text : $("#main_text").val() },
+                     success: function(msg){
+                            $("#before").hide();
+                            $("#after").show();
+                        }
+                    });
+        };
+    </script>
+{% endblock head %}
+
+{% block content %}
+    <div id="right_header">
+        <button><a href="/">Home</a></button>
+    </div>
+
+    <div class="prepend-top span-24 last center">
+        <img src="/static/imgs/logo1.png" width="310px" />
+    </div>
+
+    <div class="prepend-top span-24 last center">
+        <h1>Comments, Questions, Concerns & Feedback</h1>
+        <div id="before">
+            <p>
+                Let me know what you think of my Shopify Apps! 
+                What other Apps do you want to see built? 
+
+                <br /><br />
+                
+                Leave me a note here and I'll get back to you!
+            </p>
+
+            <label for="email">Your Email Address:</label>
+            <input type="text" id="email" name="email"/>
+            <br />
+            <textarea id="main_text"> </textarea>
+            <br />
+            <button onclick="submit();"> Submit </button>
+        </div>
+        <div id="after">
+            <p>Thanks!</p>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block bottom_content %}
+    <script>
+        $("#after").hide();
+    </script>
+{% endblock bottom_content %}
+

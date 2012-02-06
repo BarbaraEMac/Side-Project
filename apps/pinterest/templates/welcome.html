@@ -6,14 +6,17 @@
 {% endblock head %}
 
 {% block content %}
+        <div id="left_header">
+            <img src="/static/imgs/pinterest_banner.png" />
+        </div>
         <div id="right_header">
             <button><a href="/">Home</a></button>
         </div>
 
-        <div class="lower-50 prepend-5 span-4 append-2 append-bottom" style="font-size: 1.5em; font-weight: bold; opacity: 0.6;"> 1. Register Store </div>
-        <div class="lower-50 prepend-3 span-6 append-1 append-bottom" style="font-size: 1.5em; font-weight: bold;"> 2. Complete Installation </div>
+        <div class="lower-50 prepend-5 span-4 append-2" style="font-size: 1.5em; font-weight: bold; opacity: 0.6;"> 1. Register Store </div>
+        <div class="lower-50 prepend-3 span-6 append-1" style="font-size: 1.5em; font-weight: bold;"> 2. Complete Installation </div>
         
-        <h1 class="span-24 last center">Installation Guide for {{store.name}}</h1>
+        <h1 class="prepend-top span-24 last center">Installation Guide for {{store.name}}</h1>
         <div class="span-24 last">
             <div class="center span-24 last append-bottom">
                 <p>

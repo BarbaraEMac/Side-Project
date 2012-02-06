@@ -33,8 +33,9 @@ class PinterestBiller( URIHandler ):
         store_token = self.request.get( 't' )
 
         # If we've already set up the app, redirect to welcome screen
-        if get_pinterest_by_url( store_url ) != None:
-            self.redirect( url( 'PinterestWelcome' ) )
+        store = get_pinterest_by_url( store_url )
+        if store != None:
+            self.redirect( "%s?s_u=%s" % (url('PinterestWelcome'), store.uuid) )
             return
 
         # Get the store or create a new one
@@ -79,7 +80,7 @@ class PinterestBillingCallback( URIHandler ):
                 'shop_name'  : store.name
             }
 
-            self.redirect( "%s?s_u=%s" % (url('PinterestWelcome'), store.uuid))
+            self.redirect("%s?s_u=%s" % (url('PinterestWelcome'), store.uuid) )
         else:
             self.redirect( "%s?s_u=%s" % (url('PinterestBillingCancelled'), store.uuid) )
 
@@ -87,7 +88,7 @@ class PinterestBillingCallback( URIHandler ):
 class PinterestBillingCancelled( URIHandler ):
     def get( self ):
         store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
-        template_values = { }
+        template_values = { 'store' : store }
 
         self.response.out.write(self.render_page('cancelled.html', template_values)) 
 
