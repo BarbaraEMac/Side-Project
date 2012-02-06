@@ -6,14 +6,90 @@
 {% endblock head %}
 
 {% block content %}
-    <div class="prepend-top span-24 last center">
-        <h1>Pinterest+</h1>
-        <p>A Pinterest button for your store with weekly analytics!</p>
-    </div>
+        <div id="right_header">
+            <button><a target="_blank" href="/">Home</a></button>
+        </div>
 
-    <div class="prepend-top prepend-2 span-20 append-2 last">
-        Welcome
-    </div>
+        <div class="lower-50 prepend-5 span-4 append-2 append-bottom" style="font-size: 1.5em; font-weight: bold; opacity: 0.6;"> 1. Register Store </div>
+        <div class="lower-50 prepend-3 span-6 append-1 append-bottom" style="font-size: 1.5em; font-weight: bold;"> 2. Complete Installation </div>
+        
+        <h1 class="span-24 last center">Installation Guide for {{shop_name}}</h1>
+        <div class="span-24 last">
+            <div class="center span-24 last append-bottom">
+                <p>
+                    {{shop_owner}}, thanks for installing "Pinterest+"!  
+                    <br />
+                    Now, let's determine where to place the button on your product pages.
+                </p>
+            </div>
+
+            <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
+                <p>1. In your <button><a target="_blank" href="{{app.store_url}}/admin">Shopify administration panel</a></button>, open the <em>Template Editor</em> under <em>Themes</em>.</p>
+                
+                <img class="span-18" src="/static/imgs/template_editor.png" />
+            </div>
+            
+            <hr style="height: 10px; width: 500px; margin-left: auto; margin-right: auto;"></hr> 
+            
+            <div class="prepend-top prepend-3 span-12 append-bottom">
+                <p class="lower-50"> 
+                    2. Under the <em>Snippets</em> section, click on <em>product.liquid</em>. If you cannot locate <em>product.liquid</em> under <em>Snippts</em>, try looking under
+                    <em>Templates</em>.
+                </p>
+            </div>
+            
+            <div class="prepend-top prepend-2 span-6 last append-bottom">
+                 <img src="/static/imgs/templates.png" />
+                 <img src="/static/imgs/snippets.png" />
+                 <img src="/static/imgs/product_liquid.png" />
+            </div>
+
+            <hr style="height: 10px; width: 500px; margin-left: auto; margin-right: auto;"></hr> 
+            
+            <div class="prepend-3 span-18 append-3 last append-bottom">
+                <p>
+                    <strong>3. Look </strong>for where you would like the Pinterest to be placed on your product pages. You will probably want to line it up with the 
+                    other social buttons on your site. Look for some code that mentions 'social'.
+                </p>
+                 
+                 <img class="prepend-3 span-12" src="/static/imgs/placed.png" />
+            </div>
+            
+            <hr style="height: 10px; width: 500px; margin-left: auto; margin-right: auto;"></hr> 
+            
+            <div class="prepend-top prepend-3 span-18 append-3 last">
+                <p>
+                    <strong>4. Once </strong>you've picked a spot for the button, add this code:
+                    <input style='font-size:13px; max-width: 275px; width: 245px;' type='text' readonly='readonly' value="&#123;% include 'pinterest_plus' %&#125;" />           
+                </p>
+            </div>
+           
+            <hr style="height: 10px; width: 500px; margin-left: auto; margin-right: auto;"></hr> 
+            
+            <div class="prepend-3 span-18 append-3 last append-bottom">
+                <p>
+                    <strong>5. Click</strong> <em>save</em> near the top of the screen.
+                </p>
+                 
+                 <img class="span-18" src="/static/imgs/save.png" />
+            </div>
+            
+            <hr style="height: 10px; width: 500px; margin-left: auto; margin-right: auto;"></hr> 
+            
+            <div class="center prepend-top prepend-3 span-18 append-3 last append-bottom">
+                <p><b>All done! Easy peasy, eh?</b></p>
+                <br />
+                <p>Thanks so much! Please leave some kind words in the <button><a target="_blank" href="http://apps.shopify.com/">Shopify App Store</a></button> for other merchants.</p>
+            </div>
+
+            <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
+                <div class="center">
+                    <button style="font-size: 18px; font-weight: bold">
+                        <a href="{{app.store_url}}/admin">Return to your Store</a>
+                    </button>
+                </div>
+            </div>
+        </div>
 
 {% endblock content %}
 

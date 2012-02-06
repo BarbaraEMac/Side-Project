@@ -12,6 +12,16 @@ body {
 
 }
 
+#right_header {
+    position: absolute;
+    top: 7px;
+    right: 124px;
+}
+#right_header button {
+    font-size: 14px;
+    font-weight: bold;
+}
+
 a {
     text-decoration: none;
     cursor: pointer;
@@ -78,4 +88,82 @@ a {
 }
 .app_text p {
     margin-bottom: 0px;
+}
+
+button {
+    -webkit-background-clip: padding-box;
+    background-attachment: scroll;
+    background-clip: padding-box;
+    background-color: rgba(0, 0, 0, 0.046875);
+    background-image: -webkit-gradient(linear, 0% 100%, 0% 0%, from(rgb(221, 221, 221)), to(rgb(255, 255, 255)));
+    background-origin: padding-box;
+    border-bottom-color: rgba(0, 0, 0, 0.199219);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-left-color: rgba(0, 0, 0, 0.199219);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: rgba(0, 0, 0, 0.199219);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: rgba(0, 0, 0, 0.199219);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #818181;
+    cursor: auto;
+    display: inline;
+    height: 30px;
+    line-height: 30px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    outline-color: #818181;
+    outline-style: none;
+    outline-width: 0px;
+    padding-bottom: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 0px;
+    position: relative;
+    text-align: -webkit-auto;
+    text-decoration: none;
+    text-shadow: white 0px 1px 0px;
+    vertical-align: baseline;
+}
+
+ul {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+li {
+    margin-bottom: 10px;
+}
+
+#install {
+    margin-top: 50px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+#install input {
+    font-size: 1.4em;
+    line-height: 35px;
+    border-radius: 5px;
+}
+#install button{
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.app_logo {
+    width: 310px;
+    border-radius: 5px;
 }
