@@ -17,6 +17,10 @@ class DoUninstallApp( URIHandler ):
             logging.info("store: %s " % store_url)
             app = App.get_by_uuid( self.request.get('u') )
             
+            # Say goodbye
+            Email.goodbye( app.store.email, app.store.full_name )
+
+            # Tell me
             Email.emailBarbara("UNinstall app: %s\n%r %s" % (
                     app.class_name(),
                     self.request, 

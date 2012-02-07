@@ -42,9 +42,9 @@ class Email():
         Email.send_email(from_addr, to_addr, subject, body)
 
     @staticmethod
-    def welcomeClient( app_name, to_addr, name, store_name ):
+    def goodbye( to_addr, name ):
         to_addr = to_addr
-        subject = 'Thanks for Installing "%s"' % (app_name)
+        subject = 'Sad to say goodbye'
     
         # Grab first name only
         try:
@@ -52,7 +52,26 @@ class Email():
         except:
             pass
 
-        body = """<p></p>"""
+        body = """<p>Hiya %s,</p><p>I saw that you just uninstalled my Shopify App.
+        Sorry things didn't work out for you.</p><p>I'd loe to know why you uninstalled
+        so I can improve the app for future customers.</p><p>Thanks, Kurtis</p>""" % name
+        
+        Email.send_email(from_addr, to_addr, subject, body)
+
+    @staticmethod
+    def welcomeClient( app_name, to_addr, name, store_name ):
+        to_addr = to_addr
+        subject = 'Thanks!'
+    
+        # Grab first name only
+        try:
+            name = name.split(' ')[0]
+        except:
+            pass
+
+        body = """<p>Hi %s,</p><p>Just wanted to drop you a line and say thanks for
+        installing my Shopify App.</p><p>If you have any comments or questions, please
+        email me!</p><p>--Kurtis</p>""" % name
         
         Email.send_email(from_addr, to_addr, subject, body)
 
