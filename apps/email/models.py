@@ -75,6 +75,28 @@ class Email():
         
         Email.send_email(from_addr, to_addr, subject, body)
 
+    @staticmethod
+    def weeklyAnalytics( app_name, to_addr, name, total_clicks, urls, counts ):
+        to_addr = to_addr
+        subject = '[%s+] Weekly Usage Analytics' % app_name
+    
+        # Grab first name only
+        try:
+            name = name.split(' ')[0]
+        except:
+            pass
+
+        body = "<p>Hi %s,</p><p>Here are the usage stats for your %s button.</p><p><b>Total Shares:</b> %d</p><p><b>Top 5 Products</b></p>" % (name, app_name )
+
+        body += "<p><ul>"
+        for i in range( 0, 6 ):
+            body += "<li>%d: <b>Shares:</b> %d <b>URL:</b> %s</li>" %(i, 
+                                                                      counts[i],
+                                                                      urls[i])
+        body += "</ul></p><br /><br /><p>Have a great week!</p>"
+        
+        Email.send_email(from_addr, to_addr, subject, body)
+
     @staticmethod 
     def template_path(path):
         return os.path.join('apps/email/templates/', path)

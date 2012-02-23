@@ -24,15 +24,10 @@ P3P_HEADER = 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND C
 # LilCookies (secure cookies) Stuff
 COOKIE_SECRET = 'f54eb793d727492e99601446aa9b06bab504c3d37bc54c8391f385f0dde03732'
 
-PINTEREST_APP = 'Pinterest'
+APP_NAME = "SocialPlus"
 
-SHOPIFY_APPS = {
-    PINTEREST_APP : {
-        'api_key': '59e10853ab982de91a47040b987ec12b',
-        'api_secret': '7963fdddf3eaa572fe482b28295c63af',
-        'class_name': 'Pinterest',
-    }
-}
+PLUS_API_KEY = '59e10853ab982de91a47040b987ec12b'
+PLUS_API_SECRET = '7963fdddf3eaa572fe482b28295c63af'
 
 # controls the number of memcache buckets
 # and the maximum length of a bucket before it gets put to datastore
@@ -58,6 +53,7 @@ TEMPLATE_DIRS = (
 # the apps we are using
 INSTALLED_APPS = [
     'admin',
+    'analytics',
     'app',
     'email',
     'facebook',

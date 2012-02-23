@@ -63,6 +63,12 @@ class App(Model, polymodel.PolyModel):
                 total += counter.count
             memcache.add(key=self.uuid+"AppClickCounter", value=total)
         return total
+
+    def get_weekly_count(self):
+        clicks = self.get_clicks_count()
+        self.clear_clicks()
+
+        return clicks
     
     def add_clicks(self, num):
         """add num clicks to this App's click counter"""
@@ -82,6 +88,16 @@ class App(Model, polymodel.PolyModel):
     def increment_clicks(self):
         """Increment this link's click counter"""
         self.add_clicks(1)
+
+    def clear_clicks( self ):
+        memcache.add(key=self.uuid+"AppClickCounter", value=0)
+
+        for i in range( 0, NUM_CLICK_SHARDS ):
+            shard_name = self.uuid + str(i)
+            counter = AppClickCounter.get_by_key_name(shard_name)
+            if counter:
+                counter.count = 0;
+                counter.put()
 
     # Shopify API Calls --------------------------------------------------------
     def install_webhooks(self, webhooks=None):

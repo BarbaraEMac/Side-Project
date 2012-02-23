@@ -1,2 +1,5 @@
 cron:
+- description: Generate analytics for each app / week
+  url: /analytics/weekly
+  schedule: every monday 09:00 
 

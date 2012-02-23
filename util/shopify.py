@@ -23,12 +23,12 @@ class ShopifyAPI():
 
     # Shopify API Calls --------------------------------------------------------
     @staticmethod
-    def install_webhooks( app, store_url, store_token, webhooks = [] ):
+    def install_webhooks( store_url, store_token, webhooks = [] ):
         """ Install the webhooks into the Shopify store """
         url      = '%s/admin/webhooks.json' % store_url
         
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         
@@ -47,22 +47,21 @@ class ShopifyAPI():
             logging.info('%r %r' % (resp, content)) 
             if int(resp.status) == 401:
                 Email.emailBarbara(
-                    '%s WEBHOOK INSTALL FAILED\n%s\n%s\n%s' % (
-                        app,
+                    '%s WEBHOOK INSTALL FAILED\n%s\n%s' % (
                         resp,
-                        app.store_url,
+                        store_url,
                         content
                     )        
                 )
         logging.info('installed %d webhooks' % len(webhooks))
         
     @staticmethod
-    def install_script_tags( app, store_url, store_token, script_tags = [] ):
+    def install_script_tags( store_url, store_token, script_tags = [] ):
         """ Install our script tags onto the Shopify store """
 
         url      = '%s/admin/script_tags.json' % store_url
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         
@@ -79,8 +78,7 @@ class ShopifyAPI():
             logging.info('%r %r' % (resp, content))
             if int(resp.status) > 400:
                 Email.emailBarbara(
-                    '%s SCRIPT_TAGS INSTALL FAILED\n%s\n%s' % (
-                        app,
+                    '%s SCRIPT_TAGS INSTALL FAILED\n%s' % (
                         resp,
                         content
                     )        
@@ -88,11 +86,11 @@ class ShopifyAPI():
         logging.info('installed %d script_tags' % len(script_tags))
 
     @staticmethod
-    def install_assets( app, store_url, store_token, assets = [] ):
+    def install_assets( store_url, store_token, assets = [] ):
         """Must first get the `main` template in use"""
         
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         h.add_credentials(username, password)
@@ -116,7 +114,7 @@ class ShopifyAPI():
                         main_id = theme['id']
                         break
         else:
-            logging.error('%s error getting themes: \n%s\n%s' % (app, resp, content))
+            logging.error('%s error getting themes: \n%s' % (resp, content))
             return
 
         # now post all the assets
@@ -132,8 +130,7 @@ class ShopifyAPI():
             logging.info('%r %r' % (resp, content))
             if int(resp.status) != 200: 
                 Email.emailBarbara(
-                    '%s SCRIPT_TAGS INSTALL FAILED\n%s\n%s' % (
-                        app,
+                    '%s SCRIPT_TAGS INSTALL FAILED\n%s' % (
                         resp,
                         content
                     )        
@@ -142,12 +139,12 @@ class ShopifyAPI():
         logging.info('installed %d assets' % len(assets))
 
     @staticmethod
-    def recurring_billing( app, store_url, store_token, settings ):
+    def recurring_billing( store_url, store_token, settings ):
         """ Setup store with a recurring blling charge for htis app."""
         url      = '%s/admin/recurring_application_charges.json' % store_url
         
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         
@@ -170,12 +167,12 @@ class ShopifyAPI():
         return ''
 
     @staticmethod
-    def verify_recurring_charge( app, store_url, store_token, charge_id ):
+    def verify_recurring_charge( store_url, store_token, charge_id ):
         """ Setup store with a recurring blling charge for htis app."""
         url      = '%s/admin/recurring_application_charges/%s.json' % (store_url, charge_id)
         
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         
@@ -194,12 +191,12 @@ class ShopifyAPI():
         return False
 
     @staticmethod
-    def activate_recurring_charge( app, store_url, store_token, charge_id ):
+    def activate_recurring_charge( store_url, store_token, charge_id ):
         """ Setup store with a recurring blling charge for htis app."""
         url      = '%s/admin/recurring_application_charges/%s/activate.json' % (store_url, charge_id)
         
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         
@@ -208,7 +205,7 @@ class ShopifyAPI():
         
         settings = { "recurring_application_charge": {
                         "id": charge_id,
-                        "name": app + '+', 
+                        "name": APP_NAME,
                         "price" : 0.99 } 
                    }
 
@@ -220,12 +217,12 @@ class ShopifyAPI():
         return False #failure
 
     @staticmethod
-    def delete_recurring_charge( app, store_url, store_token, charge_id ):
+    def delete_recurring_charge( store_url, store_token, charge_id ):
         """ Setup store with a recurring blling charge for htis app."""
         url      = '%s/admin/recurring_application_charges/%s.json' % (store_url, charge_id)
         
-        username = SHOPIFY_APPS[app]['api_key'] 
-        password = hashlib.md5(SHOPIFY_APPS[app]['api_secret'] + store_token).hexdigest()
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
         header   = {'content-type':'application/json'}
         h        = httplib2.Http()
         
@@ -238,4 +235,25 @@ class ShopifyAPI():
             return True #success
 
         return False #failure
-    
+
+    @staticmethod
+    def fetch_store_info(store_url, store_token):
+        # Constuct the API URL
+        url      = '%s/admin/shop.json' % ( store_url )
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
+        header   = {'content-type':'application/json'}
+        h        = httplib2.Http()
+        
+        # Auth the http lib
+        h.add_credentials(username, password)
+        
+        logging.info("Querying %s" % url )
+        resp, content = h.request( url, "GET", headers = header)
+        
+        details = json.loads( content ) 
+        logging.info( details )
+        shop    = details['shop']
+        logging.info('shop: %s' % (shop))
+        
+        return shop    
