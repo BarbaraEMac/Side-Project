@@ -56,19 +56,11 @@ INSTALLED_APPS = [
     'analytics',
     'app',
     'email',
-    'facebook',
-    'fancy',
     'feedback',
     'gae_bingo',
     'gae_bingo.tests',
-    'gplus',
     'homepage',
-    'pinterest',
     'store',
-    'svpply',
-    'tumblr',
-    'twitter',
-    'want'
 ]
 
 # Overide settings with local_consts

@@ -5,5 +5,8 @@ from apps.homepage.views      import *
 
 urlpatterns = [
     # The 'Shows' (aka GET)
+    (r'/more',           ShowMorePage),
+    (r'/select',         ShowSelectPage),
+
     (r'/()',             ShowLandingPage) # Must be last
 ]

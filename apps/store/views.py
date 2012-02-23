@@ -4,8 +4,6 @@ import logging
 
 from apps.store.models import ShopifyStore
 
-from util.consts     import PINTEREST_APP
-from util.consts     import SHOPIFY_APPS
 from util.consts     import URL
 from util.helpers    import url
 from util.shopify    import ShopifyAPI
@@ -28,7 +26,7 @@ class Biller( URIHandler ):
             return
 
         # Get the store or create a new one
-        store = ShopifyStore.get_or_create(store_url, store_token, PINTEREST_APP)
+        store = ShopifyStore.get_or_create(store_url, store_token)
         
         settings = {
             "recurring_application_charge": {
@@ -39,8 +37,7 @@ class Biller( URIHandler ):
               }
         }  
 
-        redirect_url = ShopifyAPI.recurring_billing( PINTEREST_APP, 
-                                                     store_url, 
+        redirect_url = ShopifyAPI.recurring_billing( store_url, 
                                                      store_token,
                                                      settings )
         
@@ -55,8 +52,7 @@ class BillingCallback( URIHandler ):
         charge_id = self.request.get( 'charge_id' )
         store     = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         
-        if ShopifyAPI.verify_recurring_charge( PINTEREST_APP, 
-                                               store.url, 
+        if ShopifyAPI.verify_recurring_charge( store.url, 
                                                store.token, 
                                                charge_id ):
             # Fetch or create the app

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script>
+        var total = 3.49;
+
+        var install_url = function() {
+            var url = document.getElementById( 'input_url' ).value;
+            window.location = 'https://' + url + '/admin/api/auth?api_key={{API_KEY}}'; 
+        };
+
+        var handleClick = function(elem) {
+            if ( $(elem).is(':checked') ) {
+                
+                total += 0.5;
+                $(elem).attr('checked','checked');
+                
+                if ( total < 0.99 ) {
+                    total = 0.99;
+                }
+            } else {
+                
+                total -= 0.5;
+                $(elem).removeAttr('checked');
+
+                if ( total < 0.99 ) {
+                    total = 0.0;
+                }
+            }
+
+            $("#total").html( "$" + total.toFixed(2) );
+        };
+    </script>
+{% endblock head %}
+
+{% block content %}
+    <div id="right_header">
+        <button><a href="/">Home</a></button>
+    </div>
+
+    <div class="prepend-top span-24 last center">
+        <h1>Let's Start!</h1>
+        <p>Which buttons would you like on your store?</p>
+    </div>
+
+    <div class="prepend-top prepend-2 span-22 last">
+        <div class="span-3">
+            <a href="http://pinterest.com/barbaraemac/">
+                <img src="http://passets-cdn.pinterest.com/images/pinterest-button.png" width="78" height="26" alt="Follow Me on Pinterest" />
+            </a>
+        </div>
+
+        <div class="span-3">
+           <div class="fb-like" data-href="http://appsy-daisy.appspot.com" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>        </div>
+        
+        <div class="span-3">
+           <a href="https://twitter.com/share" class="twitter-share-button" data-via="BarbaraEMac">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+       </div>
+
+        <div class="span-3">
+            <a id="FancyButton" href="http://www.thefancy.com/fancyit?
+            ItemURL=http://site.com/products/shirt
+            &Title=A%20nice%20Blue%20Shirt
+            &Category=Mens&ImageURL=http://site.com/images/shirt-blue.jpeg">Fancy</a>
+            <script src="http://www.thefancy.com/fancyit.js" type="text/javascript"></script>
+        </div>
+
+        <div class="span-3">
+            <g:plusone annotation="inline" width="120"></g:plusone>
+        </div>
+        
+        <div class="span-3">
+            <a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:61px; height:20px; background:url('http://platform.tumblr.com/v1/share_2.png') top left no-repeat transparent;">Share on Tumblr</a>
+        </div> 
+        
+        <div class="span-2 last">
+            <p><b>Total $ / Month</b></p>
+        </div> 
+    </div>
+
+    <div class="prepend-top prepend-2 span-22 last center">
+        <div class="span-3">
+            <input id="pinterest" name="pinterest" type="checkbox" checked="checked" onclick="handleClick(this);" />
+        </div>
+        <div class="span-3">
+            <input id="facebook" name="facebook" type="checkbox" checked="checked" onclick="handleClick(this);" />
+        </div>
+        <div class="span-3">
+            <input id="twitter" name="twitter" type="checkbox" checked="checked" onclick="handleClick(this);" />
+        </div>
+        <div class="span-3">
+            <input id="fancy" name="fancy" type="checkbox" checked="checked" onclick="handleClick(this);" />
+        </div>
+        <div class="span-3">
+            <input id="gplus" name="gplus" type="checkbox" checked="checked" onclick="handleClick(this);" />
+        </div>
+        <div class="span-3">
+            <input id="tumblr" name="tumblr" type="checkbox" checked="checked" onclick="handleClick(this);" />
+        </div>
+        <div class="span-2 last">
+            <b><p id="total">$3.49</p></b>
+        </div>
+    </div>
+
+    <div class="prepend-top prepend-2 span-20 append-2 last">
+        <div id="install">
+            All Ready? Enter your store's URL here:<br />
+            <input type="text" id="input_url" value="Your store URL" />
+            <button onclick="install_url();">Let's Go!</button>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block bottom_content %}
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=166070566811816";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+{% endblock bottom_content %}
+

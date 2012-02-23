@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <style>
+        ol > li {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        ul > li {
+            font-weight: normal;
+            font-size: 1.0em;
+        }
+        button {
+            font-size: 1.3em;
+            text-align: center;
+        }
+    </style>
+{% endblock head %}
+
+{% block content %}
+    <div id="right_header">
+        <button><a href="/">Home</a></button>
+    </div>
+
+    <div class="prepend-top span-24 last center">
+        <h1> Learn More </h1>
+        <p>Social buttons for your store PLUS usage analytics for you!</p>
+    </div>
+
+    <div class="prepend-top prepend-2 span-20 append-2 last">
+        <h2>Pricing</h2>
+        <ol>
+            <li>How much is this Shopify App?</li>
+            The App costs $0.99 for the first social button and $0.50 for each additional social button.
+            
+            <li>Why isn't this App free?</li>
+            Since I'm hosting a website for this App, I have to pay some administrative fees. 
+            I'm only charging a minimal fee so that I can continue to run this service.
+        </ol>
+
+        <h2>Social Buttons</h2>
+        <ol>
+            <li>Why should I install this App?</li>
+            Placing social buttons on your website will let your customers spread your
+            products across their social networks. It's like free advertising for you!
+
+            <li>Which buttons are included?</li>
+            Here are the buttons that are currently supported:
+                <ul>
+                    <li>Facebook</li>
+                    <li>Fancy</li>
+                    <li>Google Plus</li>
+                    <li>Pinterest</li>
+                    <li>Svpply</li>
+                    <li>Tumblr</li>
+                    <li>Twitter</li>
+                    <li>Want</li>
+                    <li>Svpply</li>
+                </ul>
+            <li>I want social site X. Can you include it?</li>
+            Yes, please let me know <a href="/feedback"> here </a>!
+        </ol>
+
+        <a href="/select"> <button>Ready to Install?</button> </a>
+
+    </div>
+{% endblock content %}
+
+{% block bottom_content %}
+{% endblock bottom_content %}
+

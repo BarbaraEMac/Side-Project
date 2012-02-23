@@ -164,7 +164,7 @@ class ShopifyStore( Model ):
                 counter.put()
 
     # Shopify API Calls  -------------------------------------------------------
- def install_webhooks(self, webhooks=None):
+    def install_webhooks(self, webhooks=None):
         """ Install the webhooks into the Shopify store """
         # pass extra webhooks as a list
         if webhooks == None:
