@@ -6,7 +6,22 @@
 
         var install_url = function() {
             var url = document.getElementById( 'input_url' ).value;
-            window.location = 'https://' + url + '/admin/api/auth?api_key={{API_KEY}}'; 
+
+            alert($("#pinterest").is(':checked') );
+            $.ajax({ type: "POST",
+                     url: '/store/setup',
+                     data: { url       : url,
+                             pinterest : $("#pinterest").is(':checked'),
+                             facebook  : $("#facebook").is(':checked'),
+                             twitter   : $("#twitter").is(':checked'),
+                             tumblr    : $("#tumblr").is(':checked'),
+                             fancy     : $("#fancy").is(':checked'),
+                             gplus     : $("#gplus").is(':checked'),
+                           },
+                     success: function(msg){
+                            window.location = 'https://' + url + '/admin/api/auth?api_key={{API_KEY}}'; 
+                        }
+                    });
         };
 
         var handleClick = function(elem) {

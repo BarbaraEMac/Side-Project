@@ -2,31 +2,32 @@
 
 import logging
 
-from apps.store.models import ShopifyStore
+from apps.store.models      import ShopifyStore
 
-from util.consts     import URL
-from util.helpers    import url
-from util.shopify    import ShopifyAPI
-from util.shopify_helpers import get_shopify_url
-from util.urihandler import URIHandler
+from util.consts            import URL
+from util.helpers           import url
+from util.shopify           import ShopifyAPI
+from util.shopify_helpers   import get_shopify_url
+from util.urihandler        import URIHandler
 
 # The "Shows" ------------------------------------------------------------------
-class Biller( URIHandler ):
-    # Renders a app page
+class StoreBiller( URIHandler ):
     def get(self):
         # Request varZ from Shopify
         store_url   = get_shopify_url( self.request.get( 'shop' ) )
         shopify_sig = self.request.get( 'signature' )
         store_token = self.request.get( 't' )
 
-        # If we've already set up the app, redirect to welcome screen
-        store = get_pinterest_by_url( store_url )
-        if store != None:
-            self.redirect( "%s?s_u=%s" % (url('Welcome'), store.uuid) )
-            return
-
         # Get the store or create a new one
         store = ShopifyStore.get_or_create(store_url, store_token)
+        
+        # If we've already set up the app, redirect to welcome screen
+        if store.charge_id != None:
+            self.redirect( "%s?s_u=%s" % (url('Welcome'), store.uuid) )
+            return
+        
+        # Fetch store info
+        store.fetch_store_info( token ) 
         
         settings = {
             "recurring_application_charge": {
@@ -44,9 +45,7 @@ class Biller( URIHandler ):
         self.db_client = store
         self.redirect( redirect_url )
 
-
-class BillingCallback( URIHandler ):
-    # Renders a app page
+class StoreBillingCallback( URIHandler ):
     def get(self):
         # Request varZ from Shopify
         charge_id = self.request.get( 'charge_id' )
@@ -55,29 +54,22 @@ class BillingCallback( URIHandler ):
         if ShopifyAPI.verify_recurring_charge( store.url, 
                                                store.token, 
                                                charge_id ):
-            # Fetch or create the app
-            app    = get_or_create_pinterest(store, charge_id)
+            store.charge_id = charge_id
+            store.put()
             
-            # Render the page
-            template_values = {
-                'app'        : app,
-                'shop_owner' : store.full_name,
-                'shop_name'  : store.name
-            }
-
             self.redirect("%s?s_u=%s" % (url('Welcome'), store.uuid) )
+        
         else:
             self.redirect( "%s?s_u=%s" % (url('BillingCancelled'), store.uuid) )
 
-
-class BillingCancelled( URIHandler ):
+class StoreBillingCancelled( URIHandler ):
     def get( self ):
         store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         template_values = { 'store' : store }
 
         self.response.out.write(self.render_page('cancelled.html', template_values)) 
 
-class Welcome( URIHandler ):
+class StoreWelcome( URIHandler ):
     def get( self ):
         store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         template_values = { 'store' : store }

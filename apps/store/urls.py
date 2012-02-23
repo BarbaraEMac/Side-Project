@@ -5,11 +5,12 @@ from apps.store.views     import *
 
 urlpatterns = [
     # Views
-    (r'/biller',              Biller),
-    (r'/billing_callback',    BillingCallback),
-    (r'/billingcancelled',    BillingCancelled),
-    (r'/welcome',             Welcome),
+    (r'/store/biller',              StoreBiller),
+    (r'/store/billing_callback',    StoreBillingCallback),
+    (r'/store/billingcancelled',    StoreBillingCancelled),
+    (r'/store/welcome',             StoreWelcome),
 
     # Processes
-    (r'/click',               Click)
+    (r'/click',               StoreClick),
+    (r'/store/setup',         StoreSetup)
 ]

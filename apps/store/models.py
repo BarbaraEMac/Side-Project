@@ -22,26 +22,24 @@ class ShopifyStore( Model ):
     created = db.DateTimeProperty(auto_now_add = True)
     
     # Owner Properties
-    full_name = db.StringProperty( default = '', indexed = False )
+    full_name = db.StringProperty( indexed = False )
     email     = db.StringProperty( indexed = True )
 
     # Store properties
     name    = db.StringProperty( indexed = False )
     url     = db.LinkProperty  ( indexed = True )
     domain  = db.LinkProperty  ( indexed = True )
-    token   = db.StringProperty( default = '' )
+    token   = db.StringProperty( indexed = False )
 
     # Shopify's billing charge id
-    charge_id = db.StringProperty(required=True, indexed = True)
+    charge_id = db.StringProperty( indexed = True )
 
     # Apps
     pinterest_enabled = db.BooleanProperty( indexed=False, default=False )
     facebook_enabled  = db.BooleanProperty( indexed=False, default=False )
     twitter_enabled   = db.BooleanProperty( indexed=False, default=False )
-    svpply_enabled    = db.BooleanProperty( indexed=False, default=False )
     fancy_enabled     = db.BooleanProperty( indexed=False, default=False )
     gplus_enabled     = db.BooleanProperty( indexed=False, default=False )
-    want_enabled      = db.BooleanProperty( indexed=False, default=False )
     tumblr_enabled    = db.BooleanProperty( indexed=False, default=False )
     
     # Uninstalled flag
@@ -74,47 +72,42 @@ class ShopifyStore( Model ):
 
     # Constructor
     @staticmethod
-    def create( url_, token, app_type ):
+    def create( url_ ):
         url_ = get_shopify_url( url_ )
         logging.info('url :%s ' % url_)
-        # Query the Shopify API to learn more about this store
-        data = ShopifyStore.fetch_store_info( url_, token, app_type )
-        
-        # Make the Merchant 
-        # Now, make the store
-        uuid  = generate_uuid( 16 )
-        domain = get_shopify_url( data['domain'] )
-        if domain == '':
-            domain = url_
+
+        uuid = generate_uuid( 16 )
 
         store = ShopifyStore( key_name = uuid,
                               uuid     = uuid,
-                              email    = data['email'],
-                              name     = data['name'],
-                              url      = url_,
-                              domain   = domain,
-                              token    = token,
-                              full_name = data['shop_owner'])
-        store.put()
-
+                              url      = url_ )
         return store
+    
+    def updateButtons( self, p, fb, tw, g, f, t ):
+        self.pinterest_enabled = p
+        self.facebook_enabled  = fb
+        self.twitter_enabled   = tw
+        self.gplus_enabled     = g
+        self.fancy_enabled     = f
+        self.tumblr_enabled    = t
+
+        self.put()
 
     # Accessors 
     @staticmethod
     def get_by_url(store_url):
         store_url = get_shopify_url( store_url )
 
-        store = ShopifyStore.all().filter( 'store_url =', store_url ).get()
+        store = ShopifyStore.all().filter( 'url =', store_url ).get()
         return store
 
     @staticmethod
-    def get_or_create( store_url, store_token, app_type ):
-        store = ShopifyStore.get_by_url(store_url)
+    def get_or_create( store_url ):
+        store = ShopifyStore.get_by_url( store_url )
 
         if not store:
-            store = ShopifyStore.create( store_url, 
-                                         store_token, 
-                                         app_type )
+            store = ShopifyStore.create( store_url ) 
+        
         return store
 
     def get_clicks_count(self, app):
@@ -209,8 +202,20 @@ class ShopifyStore( Model ):
                                               self.store_token,
                                               self.charge_id )
 
-    def fetch_store_info(self):
-        return ShopifyAPI.fetch_store_info( self.url, self.token )
+    def fetch_store_info(self, token):
+        data = ShopifyAPI.fetch_store_info( self.url, token )
+        
+        domain = get_shopify_url( data['domain'] ) 
+        if domain == '':
+            domain = url_
+
+        self.token     = token
+        self.email     = data['email'],
+        self.name      = data['name'],
+        self.domain    = domain,
+        self.full_name = data['shop_owner'])
+    
+        self.put()
 
 ## -----------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------
