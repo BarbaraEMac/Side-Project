@@ -3,7 +3,6 @@
 import logging
 from urlparse              import urlparse
 
-from apps.pinterest.models import get_pinterest_by_url
 from apps.store.models     import ShopifyStore
 from util.shopify_helpers  import get_shopify_url
 
@@ -13,12 +12,10 @@ class StoreClick( URIHandler ):
     def post( self ):
         page_url  = urlparse( self.request.get( 'url' ) )
         domain    = "%s://%s" % (page_url.scheme, page_url.netloc)
-        store_url = get_shopify_url( domain )
-
-        app = get_pinterest_by_url( store_url )
+        store = ShopifyStore.get_by_url( domain )
 
         # Increment the total number of social shares
-        app.increment_clicks()
+        store.increment_clicks()
 
 class StoreSetup( URIHandler ):
     def post( self ):

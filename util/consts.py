@@ -26,8 +26,8 @@ COOKIE_SECRET = 'f54eb793d727492e99601446aa9b06bab504c3d37bc54c8391f385f0dde0373
 
 APP_NAME = "SocialPlus"
 
-PLUS_API_KEY = '59e10853ab982de91a47040b987ec12b'
-PLUS_API_SECRET = '7963fdddf3eaa572fe482b28295c63af'
+PLUS_API_KEY = '45321f864ce1634c6ba143645d7d4ae5'
+PLUS_API_SECRET = '31270a9386f2fbb0e470539270546083'
 
 # controls the number of memcache buckets
 # and the maximum length of a bucket before it gets put to datastore

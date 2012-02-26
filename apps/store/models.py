@@ -12,6 +12,7 @@ from util.consts            import *
 from util.model             import Model
 from util.helpers           import generate_uuid
 from util.shopify_helpers import get_shopify_url
+from util.shopify import ShopifyAPI
 
 # ------------------------------------------------------------------------------
 # ShopifyStore Class Definition ------------------------------------------------
@@ -210,10 +211,10 @@ class ShopifyStore( Model ):
             domain = url_
 
         self.token     = token
-        self.email     = data['email'],
-        self.name      = data['name'],
-        self.domain    = domain,
-        self.full_name = data['shop_owner'])
+        self.email     = data['email']
+        self.name      = data['name']
+        self.domain    = domain
+        self.full_name = data['shop_owner']
     
         self.put()
 

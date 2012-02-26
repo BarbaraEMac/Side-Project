@@ -19,7 +19,7 @@ class StoreBiller( URIHandler ):
         store_token = self.request.get( 't' )
 
         # Get the store or create a new one
-        store = ShopifyStore.get_or_create(store_url, store_token)
+        store = ShopifyStore.get_or_create(store_url)
         
         # If we've already set up the app, redirect to welcome screen
         if store.charge_id != None:
@@ -27,14 +27,14 @@ class StoreBiller( URIHandler ):
             return
         
         # Fetch store info
-        store.fetch_store_info( token ) 
+        store.fetch_store_info( store_token ) 
         
         settings = {
             "recurring_application_charge": {
                 "price": 0.99,
                 "name": "+",
                 'test' : True,
-                "return_url": "%s/p/billing_callback?s_u=%s" % (URL, store.uuid)
+                "return_url": "%s/store/billing_callback?s_u=%s" % (URL, store.uuid)
               }
         }  
 
@@ -57,10 +57,10 @@ class StoreBillingCallback( URIHandler ):
             store.charge_id = charge_id
             store.put()
             
-            self.redirect("%s?s_u=%s" % (url('Welcome'), store.uuid) )
+            self.redirect("%s?s_u=%s" % (url('StoreWelcome'), store.uuid) )
         
         else:
-            self.redirect( "%s?s_u=%s" % (url('BillingCancelled'), store.uuid) )
+            self.redirect( "%s?s_u=%s" % (url('StoreBillingCancelled'), store.uuid) )
 
 class StoreBillingCancelled( URIHandler ):
     def get( self ):

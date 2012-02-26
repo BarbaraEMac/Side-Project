@@ -3,39 +3,53 @@
 import logging
 
 from django.utils           import simplejson as json
+from google.appengine.api import taskqueue
 from google.appengine.ext   import webapp
 from google.appengine.ext   import db
 from mapreduce              import control
 from mapreduce              import operation as op
 
 from apps.analytics.models  import *
-from apps.app.models        import App
-from apps.pinterest.models  import Pinterest
 from apps.email.models      import Email
 
-def weekly_analytics( app ):
-    logging.info("Starting weekly")
-    # Grab total # clicks
-    total_clicks = app.get_weekly_count()
-    logging.info('1')
+class QueueWeeklyAnalytics( webapp.RequestHandler ):
+    def post(self):
+        return self.get( )
 
-    # Grab top urls and counts
-    urls, counts = Analytics_ThisWeek.get_weekly_count( app )
-    logging.info('2')
+    def get(self):
+        store = ShopifyStore.get_by_uuid( self.request.get('uuid') )
+        
+        logging.info("Starting weekly")
+        if store.pinterest_enabled:
+            # Grab total # clicks
+            pinterest_total_clicks = store.get_weekly_count( 'pinterest' )
 
-    # Store this week's data
-    Analytics_PastWeek.create(app, total_clicks, urls[:3])
-    logging.info('3')
+            # Grab top urls and counts
+            pinterest_urls, pinterest_counts = Analytics_ThisWeek.get_weekly_count( store, 'pinterest' )
 
-    # Send out email
-    Email.weeklyAnalytics( app.store.email, 
-                           app.store.full_name, 
-                           total_clicks,
-                           urls,
-                           counts )
-    logging.info('4')
+            # Store this week's data
+            Analytics_PastWeek.create( store, 'pinterest', pinterest_total_clicks, pinterest_urls[:3])
+        
+        if store.pinterest_enabled:
+            # Grab total # clicks
+            pinterest_total_clicks = store.get_weekly_count( 'pinterest' )
 
-class RunWeeklyAnalytics( webapp.RequestHandler ):
+            # Grab top urls and counts
+            pinterest_urls, pinterest_counts = Analytics_ThisWeek.get_weekly_count( store, 'pinterest' )
+
+            # Store this week's data
+            Analytics_PastWeek.create( store, 'pinterest', pinterest_total_clicks, pinterest_urls[:3])
+
+
+
+        # Send out email
+        Email.weeklyAnalytics( store.email, 
+                               store.full_name, 
+                               pinterest_total_clicks,
+                               pinterest_urls,
+                               pinterest_counts )
+
+class CronWeeklyAnalytics( webapp.RequestHandler ):
     """ Funnily enough, sometimes GET or POST is called. 
         Thanks for being consistent, mapreduce. """
 
@@ -43,6 +57,13 @@ class RunWeeklyAnalytics( webapp.RequestHandler ):
         return self.get( )
 
     def get(self):
+        stores = ShopifyStore.all()
+        for s in stores:
+            taskqueue.add( queue_name = 'analytics', 
+                           url        = '/analytics/queue/weekly',
+                           params     = {'uuid' : s.uuid} )
+
+        """
         e_base = 'apps.analytics.models.%s'
         f_base = 'apps.analytics.processes.%s'
         
@@ -66,3 +87,4 @@ class RunWeeklyAnalytics( webapp.RequestHandler ):
         )
         data = {'success': True, 'mapreduce_id': mapreduce_id}
         self.response.out.write(json.dumps(data))
+        """

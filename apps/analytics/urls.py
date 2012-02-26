@@ -7,7 +7,8 @@ urlpatterns = [
     # Views
 
     # Processes
-    (r'/analytics/weekly',            RunWeeklyAnalytics),
+    (r'/analytics/cron/weekly',            CronWeeklyAnalytics),
+    (r'/analytics/queue/weekly',           QueueWeeklyAnalytics),
 
 ]
 

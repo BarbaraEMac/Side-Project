@@ -3,9 +3,6 @@ import logging
 
 from google.appengine.ext   import db
 
-
-from apps.app.models        import App
-from apps.pinterest.models  import Pinterest
 from util.consts            import URL
 from util.helpers           import generate_uuid
 
@@ -14,10 +11,12 @@ from util.helpers           import generate_uuid
 # ------------------------------------------------------------------------------
 class Analytics_PastWeek(db.Model):
    # Datetime when this model was put into the DB
-    created     = db.DateTimeProperty( required= True, auto_now_add=True, indexed=False )
+    created  = db.DateTimeProperty( required= True, auto_now_add=True, indexed=False )
 
-    # Person who created/installed this App
-    app_     = db.ReferenceProperty( db.Model, required=True, indexed=True, collection_name='pastweekanalytics' )
+    # Shopify Store
+    store    = db.ReferenceProperty( db.Model, required=True, indexed=True, collection_name='pastweekanalytics' )
+    
+    app_     = db.StringProperty( required=True, indexed=True )
 
     # Count for that week
     count    = db.IntegerProperty( required=True, default=0, indexed=False )
@@ -29,30 +28,32 @@ class Analytics_PastWeek(db.Model):
         super(Analytics_PastWeek, self).__init__(*args, **kwargs)
 
     @staticmethod
-    def create( app, new_count, prods ):
-        pw = Analytics_LastWeek( app_ = app, count = 0, products = prods )
+    def create( store, app, new_count, prods ):
+        pw = Analytics_LastWeek( store = store, app_ = app, count = 0, products = prods )
         pw.put()
 
 # ------------------------------------------------------------------------------
 # Analytics Class Definition ---------------------------------------------------
 # ------------------------------------------------------------------------------
 class Analytics_ThisWeek(db.Model):
-    # Person who created/installed this App
-    app_        = db.ReferenceProperty( db.Model, required=True, indexed=True, collection_name='thisweekanalytics' )
-
+    # Shopify Store
+    store       = db.ReferenceProperty( db.Model, required=True, indexed=True, collection_name='thisweekanalytics' )
+    
     product_url = db.StringProperty( required=True, indexed=True )
+
+    app_        = db.StringProperty( required=True, indexed=True )
 
     def __init__(self, *args, **kwargs):
         super(Analytics_ThisWeek, self).__init__(*args, **kwargs)
 
-    def create( app, url ):
-        tw = Analytics_ThisWeek( app_ = app, product_url = url )
+    def create( store, app, url ):
+        tw = Analytics_ThisWeek( store = store, app_ = app, product_url = url )
         
         tw.put()
 
     @staticmethod
-    def get_weekly_count( app ):
-        tw = Analytics_ThisWeek.all().filter( 'app_ =', app )
+    def get_weekly_count( store, app ):
+        tw = Analytics_ThisWeek.all().filter('store =', store).filter( 'app_ =', app )
 
         # Get top 5 most shared products + counts
         sort = sorted(tw, key=lambda t: t.get_clicks_count() )
@@ -70,12 +71,13 @@ class Analytics_ThisWeek(db.Model):
         return urls, counts
 
     @staticmethod
-    def add_new( app, url ):
-        tw = Analytics_ThisWeek.all().filter( 'app_ = ', app )\
+    def add_new( store, app, url ):
+        tw = Analytics_ThisWeek.all().filter('store = ', store )\
+                                     .filter( 'app_ = ', app )\
                                      .filter( 'product_url = ', url ).get()
 
         if tw is None:
-            tw = Analytics_ThisWeek.create( app, url )
+            tw = Analytics_ThisWeek.create( store, app, url )
 
         tw.increment_clicks()
 
