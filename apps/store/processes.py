@@ -10,13 +10,14 @@ from util.shopify_helpers   import get_shopify_url
 from util.urihandler        import URIHandler
 
 class StoreClick( URIHandler ):
-    def post( self ):
+    def get( self ):
         page_url  = urlparse( self.request.get( 'url' ) )
         domain    = "%s://%s" % (page_url.scheme, page_url.netloc)
         store = ShopifyStore.get_by_url( domain )
+        app = self.request.get( 'app' )
 
         # Increment the total number of social shares
-        store.increment_clicks()
+        store.increment_clicks( app )
 
 class StoreSetup( URIHandler ):
     def post( self ):

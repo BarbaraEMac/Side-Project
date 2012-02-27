@@ -2,17 +2,23 @@
 
 import hashlib
 import logging
+import random
 
-from django.utils         import simplejson as json
+from django.utils           import simplejson as json
 from google.appengine.api   import memcache
 from google.appengine.ext   import db
+
+from apps.email.models      import Email
+from apps.store.scripts     import *
 
 from util                   import httplib2
 from util.consts            import *
 from util.model             import Model
 from util.helpers           import generate_uuid
-from util.shopify_helpers import get_shopify_url
-from util.shopify import ShopifyAPI
+from util.shopify_helpers   import get_shopify_url
+from util.shopify           import ShopifyAPI
+
+NUM_CLICK_SHARDS = 10
 
 # ------------------------------------------------------------------------------
 # ShopifyStore Class Definition ------------------------------------------------
@@ -158,6 +164,68 @@ class ShopifyStore( Model ):
                 counter.put()
 
     # Shopify API Calls  -------------------------------------------------------
+    def do_install( self ):
+        # Define our asset 
+        scripts = buttons = appsy_scripts = ""
+        
+        if self.pinterest_enabled:
+            scripts += pinterest_script 
+            buttons += '\n%s' % pinterest_button
+            appsy_scripts += appsy_pinterest_script
+        
+        if self.fancy_enabled:
+            scripts += fancy_script 
+            buttons += '\n%s' % fancy_button
+            appsy_scripts += appsy_fancy_script
+        
+        if self.facebook_enabled:
+            scripts += facebook_script 
+            buttons += '\n%s' % facebook_button
+            appsy_scripts += appsy_facebook_script
+        
+        if self.twitter_enabled:
+            scripts += twitter_script 
+            buttons += '\n%s' % twitter_button
+            appsy_scripts += appsy_twitter_script
+        
+        if self.tumblr_enabled:
+            scripts += tumblr_script 
+            buttons += '\n%s' %  tumblr_button
+            appsy_scripts += appsy_tumblr_script
+        
+        if self.gplus_enabled:
+            scripts += gplus_script 
+            buttons += '\n%s' % gplus_button
+            appsy_scripts += appsy_gplus_script
+        
+        div = "\n\n<div id='AppsyDaisy' style='float: left;'>%s\n</div>\n" % buttons
+
+        liquid_assets = [{
+            'asset': {
+                'value': "%s %s %s" % (div, scripts, appsy_scripts),
+                'key': 'snippets/social_plus.liquid'
+            }
+        }]
+
+        # Install yourself in the Shopify store
+        self.install_webhooks( webhooks = None )
+        self.install_assets( assets = liquid_assets )
+        
+        self.activate_recurring_billing( )
+
+        Email.welcomeClient( self.email, 
+                             self.full_name, 
+                             self.name )
+        
+        # Email Barbara
+        Email.emailBarbara(
+            'Pinterest Install: %s %s %s' % (
+                self.uuid,
+                self.name,
+                self.url
+            )
+        )
+
     def install_webhooks(self, webhooks=None):
         """ Install the webhooks into the Shopify store """
         # pass extra webhooks as a list
@@ -177,8 +245,8 @@ class ShopifyStore( Model ):
         }
         webhooks.append(data)
 
-        ShopifyAPI.install_webhooks( self.store_url, 
-                                     self.store_token,
+        ShopifyAPI.install_webhooks( self.url, 
+                                     self.token,
                                      webhooks )
     
     def install_script_tags(self, script_tags=None):
@@ -186,21 +254,21 @@ class ShopifyStore( Model ):
         if script_tags == None:
             script_tags = []
         
-        ShopifyAPI.install_script_tags( self.store_url, 
-                                        self.store_token,
+        ShopifyAPI.install_script_tags( self.url, 
+                                        self.token,
                                         script_tags )
         
     def install_assets(self, assets=None):
         if assets == None:
             assets = []
 
-        ShopifyAPI.install_assets( self.store_url, 
-                                   self.store_token,
+        ShopifyAPI.install_assets( self.url, 
+                                   self.token,
                                    assets )
 
     def activate_recurring_billing(self):
-        ShopifyAPI.activate_recurring_charge( self.store_url, 
-                                              self.store_token,
+        ShopifyAPI.activate_recurring_charge( self.url, 
+                                              self.token,
                                               self.charge_id )
 
     def fetch_store_info(self, token):
@@ -248,3 +316,4 @@ class ClickCounter(db.Model):
 
     app_uuid = db.StringProperty (indexed=True, required=True)
     count    = db.IntegerProperty(indexed=False, required=True, default=0)
+

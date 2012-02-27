@@ -42,6 +42,8 @@ class StoreBillingCallback( URIHandler ):
         if ShopifyAPI.verify_recurring_charge( store.url, 
                                                store.token, 
                                                charge_id ):
+            store.do_install()
+            
             store.charge_id = charge_id
             store.put()
             
@@ -63,6 +65,4 @@ class StoreWelcome( URIHandler ):
         template_values = { 'store' : store }
 
         self.response.out.write(self.render_page('welcome.html', template_values)) 
-
-
 
