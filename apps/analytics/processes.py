@@ -22,7 +22,7 @@ class QueueWeeklyAnalytics( webapp.RequestHandler ):
         logging.info("Starting weekly")
         if store.pinterest_enabled:
             # Grab total # clicks
-            pinterest_total_clicks = store.get_weekly_count( 'pinterest' )
+            pinterest_total_clicks = 0
 
             # Grab top urls and counts
             pinterest_urls, pinterest_counts = Analytics_ThisWeek.get_weekly_count( store, 'pinterest' )
@@ -32,15 +32,13 @@ class QueueWeeklyAnalytics( webapp.RequestHandler ):
         
         if store.pinterest_enabled:
             # Grab total # clicks
-            pinterest_total_clicks = store.get_weekly_count( 'pinterest' )
+            pinterest_total_clicks = 0
 
             # Grab top urls and counts
             pinterest_urls, pinterest_counts = Analytics_ThisWeek.get_weekly_count( store, 'pinterest' )
 
             # Store this week's data
             Analytics_PastWeek.create( store, 'pinterest', pinterest_total_clicks, pinterest_urls[:3])
-
-
 
         # Send out email
         Email.weeklyAnalytics( store.email, 

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import logging
+
 from urlparse               import urlparse
 
+from apps.analytics.models  import Analytics_ThisWeek
 from apps.store.models      import ShopifyStore
 from util.consts            import *
 from util.shopify           import ShopifyAPI
@@ -11,13 +13,14 @@ from util.urihandler        import URIHandler
 
 class StoreClick( URIHandler ):
     def get( self ):
-        page_url  = urlparse( self.request.get( 'url' ) )
-        domain    = "%s://%s" % (page_url.scheme, page_url.netloc)
-        store = ShopifyStore.get_by_url( domain )
-        app = self.request.get( 'app' )
+        app      = self.request.get( 'app' )
+        url      = self.request.get( 'url' )
+        page_url = urlparse( url )
+        domain   = "%s://%s" % (page_url.scheme, page_url.netloc)
+        store    = ShopifyStore.get_by_url( domain )
 
         # Increment the total number of social shares
-        store.increment_clicks( app )
+        Analytics_ThisWeek.add_new( store, app, url )
 
 class StoreSetup( URIHandler ):
     def post( self ):

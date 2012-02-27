@@ -31,7 +31,8 @@ var AppsyDaisyPinterest_run = function() {
     var inIframe         = false;
 
     for ( var i = 0; i < children.length; i ++ ) {
-        if( children[i].tagName.toLowerCase() === "iframe" ) {
+        if( children[i].tagName != undefined && children[i].tagName.toLowerCase() === "iframe" ) {
+            console.log('running pinterest');
             pinterest_iframe = $(children[i]);
         }
     }

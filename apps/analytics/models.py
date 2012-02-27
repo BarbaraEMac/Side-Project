@@ -1,10 +1,15 @@
 #!/usr/bin/env python
-import logging
 
+import logging
+import random
+
+from google.appengine.api   import memcache
 from google.appengine.ext   import db
 
 from util.consts            import URL
 from util.helpers           import generate_uuid
+
+NUM_CLICK_SHARDS = 10
 
 # ------------------------------------------------------------------------------
 # Analytics Class Definition ---------------------------------------------------
@@ -36,6 +41,8 @@ class Analytics_PastWeek(db.Model):
 # Analytics Class Definition ---------------------------------------------------
 # ------------------------------------------------------------------------------
 class Analytics_ThisWeek(db.Model):
+    uuid    = db.StringProperty(indexed = False)
+
     # Shopify Store
     store       = db.ReferenceProperty( db.Model, required=True, indexed=True, collection_name='thisweekanalytics' )
     
@@ -46,10 +53,19 @@ class Analytics_ThisWeek(db.Model):
     def __init__(self, *args, **kwargs):
         super(Analytics_ThisWeek, self).__init__(*args, **kwargs)
 
+    @staticmethod
     def create( store, app, url ):
-        tw = Analytics_ThisWeek( store = store, app_ = app, product_url = url )
+        uuid = generate_uuid( 16 )
+
+        tw = Analytics_ThisWeek( key_name    = uuid,
+                                 uuid        = uuid,
+                                 store       = store, 
+                                 app_        = app, 
+                                 product_url = url )
         
         tw.put()
+        
+        return tw
 
     @staticmethod
     def get_weekly_count( store, app ):
@@ -72,7 +88,7 @@ class Analytics_ThisWeek(db.Model):
 
     @staticmethod
     def add_new( store, app, url ):
-        tw = Analytics_ThisWeek.all().filter('store = ', store )\
+        tw = Analytics_ThisWeek.all().filter( 'store = ', store )\
                                      .filter( 'app_ = ', app )\
                                      .filter( 'product_url = ', url ).get()
 
@@ -100,7 +116,7 @@ class Analytics_ThisWeek(db.Model):
             counter = AnalyticsClickCounter.get_by_key_name(shard_name)
             if counter is None:
                 counter = AnalyticsClickCounter( key_name = shard_name, 
-                                                 app_uuid = self.uuid )
+                                                 uuid     = self.uuid )
             counter.count += num
             counter.put()
 
@@ -127,7 +143,7 @@ class Analytics_ThisWeek(db.Model):
 class AnalyticsClickCounter(db.Model):
     """Sharded counter for clicks"""
 
-    analytics_uuid = db.StringProperty (indexed=True, required=True)
+    uuid = db.StringProperty (indexed=True, required=True)
     count          = db.IntegerProperty(indexed=False, required=True, default=0)
 
 

@@ -2,7 +2,6 @@
 
 import hashlib
 import logging
-import random
 
 from django.utils           import simplejson as json
 from google.appengine.api   import memcache
@@ -13,12 +12,10 @@ from apps.store.scripts     import *
 
 from util                   import httplib2
 from util.consts            import *
-from util.model             import Model
 from util.helpers           import generate_uuid
+from util.model             import Model
 from util.shopify_helpers   import get_shopify_url
 from util.shopify           import ShopifyAPI
-
-NUM_CLICK_SHARDS = 10
 
 # ------------------------------------------------------------------------------
 # ShopifyStore Class Definition ------------------------------------------------
@@ -117,52 +114,6 @@ class ShopifyStore( Model ):
         
         return store
 
-    def get_clicks_count(self, app):
-        """Count this apps sharded clicks"""
-        total = memcache.get(self.uuid+app+"ClickCounter")
-        if total is None:
-            total = 0
-            for counter in ClickCounter.all().\
-            filter('app_uuid =', self.uuid).fetch(NUM_CLICK_SHARDS):
-                total += counter.count
-            memcache.add(key=self.uuid+app+"ClickCounter", value=total)
-        return total
-
-    def get_weekly_count(self, app):
-        clicks = self.get_clicks_count(app)
-        self.clear_clicks(app)
-
-        return clicks
-    
-    def add_clicks(self, app, num):
-        """add num clicks to this App's click counter"""
-        def txn():
-            index = random.randint(0, NUM_CLICK_SHARDS-1)
-            shard_name = self.uuid + app + str(index)
-            counter = ClickCounter.get_by_key_name(shard_name)
-            if counter is None:
-                counter = ClickCounter(key_name=shard_name, 
-                                       app_uuid=self.uuid)
-            counter.count += num
-            counter.put()
-
-        db.run_in_transaction(txn)
-        memcache.incr(self.uuid+app+"ClickCounter")
-
-    def increment_clicks(self, app):
-        """Increment this link's click counter"""
-        self.add_clicks(app, 1)
-
-    def clear_clicks( self, app ):
-        memcache.add(key=self.uuid+app+"ClickCounter", value=0)
-
-        for i in range( 0, NUM_CLICK_SHARDS ):
-            shard_name = self.uuid + app + str(i)
-            counter = ClickCounter.get_by_key_name(shard_name)
-            if counter:
-                counter.count = 0
-                counter.put()
-
     # Shopify API Calls  -------------------------------------------------------
     def do_install( self ):
         # Define our asset 
@@ -183,11 +134,6 @@ class ShopifyStore( Model ):
             buttons += '\n%s' % facebook_button
             appsy_scripts += appsy_facebook_script
         
-        if self.twitter_enabled:
-            scripts += twitter_script 
-            buttons += '\n%s' % twitter_button
-            appsy_scripts += appsy_twitter_script
-        
         if self.tumblr_enabled:
             scripts += tumblr_script 
             buttons += '\n%s' %  tumblr_button
@@ -197,6 +143,11 @@ class ShopifyStore( Model ):
             scripts += gplus_script 
             buttons += '\n%s' % gplus_button
             appsy_scripts += appsy_gplus_script
+        
+        if self.twitter_enabled:
+            scripts += twitter_script 
+            buttons += '\n%s' % twitter_button
+            appsy_scripts += appsy_twitter_script
         
         div = "\n\n<div id='AppsyDaisy' style='float: left;'>%s\n</div>\n" % buttons
 
@@ -307,13 +258,4 @@ class ShopifyStore( Model ):
             return 0.99
         elif cost > 1:
             return 0.99 + (cost-1)*0.5
-
-## -----------------------------------------------------------------------------
-## -----------------------------------------------------------------------------
-## -----------------------------------------------------------------------------
-class ClickCounter(db.Model):
-    """Sharded counter for clicks"""
-
-    app_uuid = db.StringProperty (indexed=True, required=True)
-    count    = db.IntegerProperty(indexed=False, required=True, default=0)
 
