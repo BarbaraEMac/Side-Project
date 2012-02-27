@@ -8,6 +8,7 @@
 {% block content %}
         <div id="left_header">
             <img src="/static/imgs/banner.png" />
+            <a href="/feedback?s_u={{store.uuid}}">Email Me</a>
         </div>
         <div id="right_header">
             <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
@@ -82,10 +83,12 @@
             
             <div class="center prepend-top prepend-3 span-18 append-3 last append-bottom">
                 <p><b>All done! Easy peasy, eh?</b></p>
+                <p>Want to customize the layout / orientation, button order, or button location?</p>
+                <p>If you want to know what is available, <a href="/feedback?s_u={{store.uuid}}">Email Me</a> OR if you want me to make changes for you, click <a
+                href="/store/support?s_u={{store.uuid}}">here</a>.</p>
                 <br />
                 <p>Thanks so much! Please leave some kind words in the <button><a target="_blank" href="http://apps.shopify.com/">Shopify App Store</a></button> for other merchants.</p>
 
-                <h1>Customizations - layout, order, location,</h1>
             </div>
 
             <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">

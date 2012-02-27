@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 
 {% block head %}
+    <style>
+        li {
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+    </style>
     <script>
         var onetime_it = function() {
             $.ajax({ type: "POST",
@@ -15,6 +23,9 @@
             $.ajax({ type: "POST",
                      url: '/feedback/post',
                      data: { title: "Support",
+                             owner : "{{store.full_name}}",
+                             store_name : "{{store.name}}",
+                             store_url  : "{{store.url}}",
                              email: $("#email").val(),
                              text : $("#main_text").val() },
                      success: function(msg){
@@ -43,21 +54,35 @@
             </div>
 
             {% if paid %}
-                <div id="before" class="prepend-3 span-18 append-3 last append-bottom center">
+                <div id="before" class="prepend-2 span-20 append-2 last append-bottom center">
+                    <div class="span-12">
+                        <label for="email">Your Email Address:</label>
+                        <input type="text" id="email" name="email" value="{{store.email}}" style="width:282px"/>
+                        
+                        <br />
+                        <textarea id="main_text"> </textarea>
+                        <br />
+                        <button onclick="submit();"> Submit </button>
+                    </div>
+                    <div class="span-8 last">
                     <p> 
                         {% if thanks %}
                             <span style="color: red">Thanks for authorizing the transaction!<br /></span>
                         {% endif %}
-                        How can I help? Want me to do the installation for you?
+                        How can I help? Here's a short list of things I can do for you.
+                        <ul>
+                            <li>Complete the installation.</li>
+                            <li>Change the layout of the buttons (ie. horizontal to vertical).</li>
+                            <li>Change the order of the buttons.</li>
+                            <li>Change the location of the buttons.</li>
+                            <li>Disable your existing social buttons from displaying.</li>
+                            <li>Customize the default Pinterest share text.</li>
+                            <li>Customize the Fancy button's 'category' so your products are classified appropriately.</li>
+                            <li>And many more ... </li>
+                        </ul>
                     </p>
+                    </div>
 
-                    <label for="email">Your Email Address:</label>
-                    <input type="text" id="email" name="email" value="{{store.email}}" style="width:282px"/>
-                    
-                    <br />
-                    <textarea id="main_text"> </textarea>
-                    <br />
-                    <button onclick="submit();"> Submit </button>
                 </div>
                 <div id="after" class="prepend-3 span-18 append-3 last append-bottom" style="display:none">
                     <p class="center"> 
@@ -78,9 +103,22 @@
 
 
             {% else %}
-                <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
+                <div class="prepend-3 span-18 append-3 last append-bottom">
+                    <p> Here is a list of some of the things that I can do for you.
+                         <ul>
+                            <li>Complete the installation.</li>
+                            <li>Change the layout of the buttons (ie. horizontal to vertical).</li>
+                            <li>Change the order of the buttons.</li>
+                            <li>Change the location of the buttons.</li>
+                            <li>Disable your existing social buttons from displaying.</li>
+                            <li>Customize the default Pinterest share text.</li>
+                            <li>Customize the Fancy button's 'category' so your products are classified appropriately.</li>
+                            <li>And many more ... </li>
+                        </ul>
+                    </p>
+
                     <p style="center">
-                        I'd be happy to help you out! However, there's a small, one-time fee of $5.
+                        I'd be happy to help you out! However, there's a small, one-time fee of $5 since it takes time for me to understand your store's code.
                         Afterwards, I'm happy to complete your installation and make
                         any customizations (within reason!) that you'd like!
                     </p>
@@ -89,7 +127,7 @@
                 <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
                     <div class="center">
                         <p>
-                            Ready
+                            Ready? I can't wait to help you!
                             <button onclick="onetime_it();">Click here to authorize the one-time fee</button> 
                         </p>
                     </div>
