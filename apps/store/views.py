@@ -19,21 +19,20 @@ class StoreAppSelect( URIHandler ):
         store_token = self.request.get( 't' )
 
         # Get the store or create a new one
-        store = ShopifyStore.get_or_create(store_url)
+        store = ShopifyStore.get_or_create(store_url, store_token)
         
+        """
         # If we've already set up the app, redirect to welcome screen
         if store.charge_id != None:
             self.redirect( "%s?s_u=%s" % (url('StoreWelcome'), store.uuid) )
             return
-        
-        # Fetch store info
-        store.fetch_store_info( store_token ) 
+        """
         
         template_values = { 'store' : store }
 
         self.response.out.write(self.render_page('select.html', template_values)) 
 
-class StoreBillingCallback( URIHandler ):
+class StoreRecurringCallback( URIHandler ):
     def get(self):
         # Request varZ from Shopify
         charge_id = self.request.get( 'charge_id' )
@@ -50,14 +49,52 @@ class StoreBillingCallback( URIHandler ):
             self.redirect("%s?s_u=%s" % (url('StoreWelcome'), store.uuid) )
         
         else:
-            self.redirect( "%s?s_u=%s" % (url('StoreBillingCancelled'), store.uuid) )
+            self.redirect( "%s?s_u=%s" % (url('StoreRecurringCancelled'), store.uuid) )
 
-class StoreBillingCancelled( URIHandler ):
+class StoreRecurringCancelled( URIHandler ):
     def get( self ):
         store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
         template_values = { 'store' : store }
 
         self.response.out.write(self.render_page('cancelled.html', template_values)) 
+
+class StoreOneTimeCallback( URIHandler ):
+    def get(self):
+        # Request varZ from Shopify
+        charge_id = self.request.get( 'charge_id' )
+        store     = ShopifyStore.get_by_uuid( self.request.get('s_u') )
+        
+        if ShopifyAPI.verify_charge( store.url, 
+                                     store.token, 
+                                     charge_id ):
+            store.onetime_charge_id = charge_id
+            store.put()
+            
+            self.redirect("%s?s_u=%s&thx=true" % (url('StoreSupport'), store.uuid) )
+        
+        else:
+            self.redirect( "%s?s_u=%s" % (url('StoreOneTimeCancelled'), store.uuid) )
+
+class StoreOneTimeCancelled( URIHandler ):
+    def get( self ):
+        store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
+        template_values = { 'store' : store }
+
+        self.response.out.write(self.render_page('cancelled.html', template_values)) 
+
+class StoreSupport( URIHandler ):
+    def get( self ):
+        store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
+        
+        just_paid = self.request.get('thx') != ""
+        if just_paid:
+            ShopifyAPI.activate_charge( store.url, store.token, store.onetime_charge_id )
+
+        template_values = { 'store'  : store,
+                            'paid'   : store.onetime_charge_id != None,
+                            'thanks' : just_paid }
+
+        self.response.out.write(self.render_page('support.html', template_values)) 
 
 class StoreWelcome( URIHandler ):
     def get( self ):

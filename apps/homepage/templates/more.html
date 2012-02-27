@@ -18,10 +18,13 @@
 {% endblock head %}
 
 {% block content %}
-    <div id="right_header">
-        <button><a href="/">Home</a></button>
+    <div id="left_header">
+        <img src="/static/imgs/banner.png" />
     </div>
-
+    <div id="right_header">
+        <!-- <button><a href="/">Home</a></button> -->
+    </div> 
+    
     <div class="prepend-top span-24 last center">
         <h1> Learn More </h1>
         <p>Social buttons for your store PLUS usage analytics for you!</p>
@@ -58,7 +61,12 @@
             Yes, please let me know <button><a href="/feedback"> here</a></button>!
         </ol>
 
-        <a href="/select"> <button>Ready to Install?</button> </a>
+        <h2>Other Questions?</h2>
+        I want to hear from you! Ask any questions you have or give me feedback <button><a href="/feedback">here</a></button>!
+
+        <br /><br />
+
+        <a href="http://apps.shopify.com/socialplus"> <button>Ready to Install?</button> </a>
 
     </div>
 {% endblock content %}

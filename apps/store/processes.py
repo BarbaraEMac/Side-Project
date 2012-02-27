@@ -58,6 +58,25 @@ class StoreBiller( URIHandler ):
                                                      settings )
         self.response.out.write( redirect_url )
 
+class StoreOneTime( URIHandler ):
+    def post( self ):
+
+        store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
+
+        settings = {
+            "application_charge": {
+                "price": 5.00,
+                "name": "Customization & Support",
+                'test' : True,
+                "return_url": "%s/store/onetime_callback?s_u=%s" % (URL, store.uuid)
+              }
+        }  
+
+        redirect_url = ShopifyAPI.onetime_charge( store.url, 
+                                                  store.token,
+                                                  settings )
+        self.response.out.write( redirect_url )
+
 class StoreUninstall( URIHandler ):
     def get(self):
         return self.post()

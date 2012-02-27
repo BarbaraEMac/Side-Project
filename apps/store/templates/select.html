@@ -53,8 +53,12 @@
 {% endblock head %}
 
 {% block content %}
+    <div id="left_header">
+        <img src="/static/imgs/banner.png" />
+    </div>
     <div id="right_header">
-        <button><a href="/">Home</a></button>
+        <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
+        <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
     </div>
 
     <div class="prepend-top span-24 last center">

@@ -6,7 +6,8 @@
 
             $.ajax({ type: "POST",
                      url: '/feedback/post',
-                     data: { email: $("#email").val(),
+                     data: { title: 'Feedback',
+                             email: $("#email").val(),
                              text : $("#main_text").val() },
                      success: function(msg){
                             $("#before").hide();

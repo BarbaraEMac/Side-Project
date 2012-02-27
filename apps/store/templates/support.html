@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <script>
+        var onetime_it = function() {
+            $.ajax({ type: "POST",
+                     url: '/store/onetime',
+                     data: { s_u  : '{{ store.uuid }}', },
+                     success: function(msg){ window.location = msg; }
+                   });
+        };
+
+        var submit = function() {
+
+            $.ajax({ type: "POST",
+                     url: '/feedback/post',
+                     data: { title: "Support",
+                             email: $("#email").val(),
+                             text : $("#main_text").val() },
+                     success: function(msg){
+                            $("#before").hide();
+                            $("#after").show();
+                        }
+                    });
+        };
+    </script>
+{% endblock head %}
+
+{% block content %}
+        <div id="left_header">
+            <img src="/static/imgs/banner.png" />
+        </div>
+        <div id="right_header">
+            <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
+            <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
+        </div>
+
+        <h1 class="prepend-top span-24 last center">Need Some Assistance?</h1>
+        <div class="span-24 last">
+            <div class="center span-24 last append-bottom">
+                <p>Code can be confusing, eh? Would you like some help with installing the Shopify App?
+                </p>
+            </div>
+
+            {% if paid %}
+                <div id="before" class="prepend-3 span-18 append-3 last append-bottom center">
+                    <p> 
+                        {% if thanks %}
+                            <span style="color: red">Thanks for authorizing the transaction!<br /></span>
+                        {% endif %}
+                        How can I help? Want me to do the installation for you?
+                    </p>
+
+                    <label for="email">Your Email Address:</label>
+                    <input type="text" id="email" name="email" value="{{store.email}}" style="width:282px"/>
+                    
+                    <br />
+                    <textarea id="main_text"> </textarea>
+                    <br />
+                    <button onclick="submit();"> Submit </button>
+                </div>
+                <div id="after" class="prepend-3 span-18 append-3 last append-bottom" style="display:none">
+                    <p class="center"> 
+                        <span style="color: red">Thanks! I'll get back to you as soon as I can (probably within the hour)! <br /><br /> </span>
+                        To help speed things along, please add me as a <b>temporary staff member</b> for your store.
+                    </p>
+                    <p> Here's how you do it:
+                        <ol>
+                            <li>Go to your Shopify Admin Panel.</li>
+                            <li>Click on 'Account'.</li>
+                            <li>Scroll until you see "Staff Members" and add a new one with the following information:<br />Barbara Macdonald, barbaraemac@gmail.com</li>
+                        </ol>
+                    </p>
+                    <p class="center">
+                        I'll be emailed as soon as you complete these steps and then I can get in and start doing what you want!
+                    </p>
+               </div>
+
+
+            {% else %}
+                <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
+                    <p style="center">
+                        I'd be happy to help you out! However, there's a small, one-time fee of $5.
+                        Afterwards, I'm happy to complete your installation and make
+                        any customizations (within reason!) that you'd like!
+                    </p>
+                </div>
+
+                <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
+                    <div class="center">
+                        <p>
+                            Ready
+                            <button onclick="onetime_it();">Click here to authorize the one-time fee</button> 
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
+                <div class="center">
+                    <button style="font-size: 18px; font-weight: bold">
+                        <a href="{{store.url}}/admin">Return to your Store</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+{% endblock content %}
+
+{% block bottom_content %}
+{% endblock bottom_content %}
+

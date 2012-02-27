@@ -10,6 +10,7 @@ from util.urihandler      import URIHandler
 # The "Dos" ------------------------------------------------------------------
 class FeedbackPost( URIHandler ):
     def post( self ):
+        title = self.request.get('title')
         text  = self.request.get('text')
         email = self.request.get('email')
         
@@ -27,6 +28,6 @@ class FeedbackPost( URIHandler ):
             url = os.environ['HTTP_REFERER']
 
         # Email Barbara
-        Email.emailBarbara( 'Feedback: %s\n%s\n%s' % (email, text, url) )
+        Email.emailBarbara( '[%s]: %s\n%s\n%s' % (title, email, text, url) )
 
         self.response.out.write("Thanks!") 

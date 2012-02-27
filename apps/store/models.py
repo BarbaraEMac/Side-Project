@@ -23,7 +23,7 @@ from util.shopify           import ShopifyAPI
 class ShopifyStore( Model ):
     """A ShopifyStore or the website"""
     uuid    = db.StringProperty(indexed = True)
-    created = db.DateTimeProperty(auto_now_add = True)
+    created = db.DateTimeProperty(auto_now_add = True, indexed=False)
     
     # Owner Properties
     full_name = db.StringProperty( indexed = False )
@@ -32,11 +32,14 @@ class ShopifyStore( Model ):
     # Store properties
     name    = db.StringProperty( indexed = False )
     url     = db.LinkProperty  ( indexed = True )
-    domain  = db.LinkProperty  ( indexed = True )
+    domain  = db.LinkProperty  ( indexed = False )
     token   = db.StringProperty( indexed = False )
 
-    # Shopify's billing charge id
-    charge_id = db.StringProperty( indexed = True )
+    # Shopify's recurring billing charge id
+    charge_id = db.StringProperty( indexed = False )
+
+    # Shopify's one-time billing charge id
+    onetime_charge_id = db.StringProperty( indexed = False )
 
     # Apps
     pinterest_enabled = db.BooleanProperty( indexed=False, default=False )
@@ -76,7 +79,7 @@ class ShopifyStore( Model ):
 
     # Constructor
     @staticmethod
-    def create( url_ ):
+    def create( url_, token ):
         url_ = get_shopify_url( url_ )
         logging.info('url :%s ' % url_)
 
@@ -85,6 +88,9 @@ class ShopifyStore( Model ):
         store = ShopifyStore( key_name = uuid,
                               uuid     = uuid,
                               url      = url_ )
+        
+        store.fetch_store_info( token )
+        
         return store
     
     def updateButtons( self, p, fb, tw, g, f, t ):
@@ -106,11 +112,17 @@ class ShopifyStore( Model ):
         return store
 
     @staticmethod
-    def get_or_create( store_url ):
+    def get_or_create( store_url, store_token ):
         store = ShopifyStore.get_by_url( store_url )
+        
+        if store.uninstalled == True or store.token != store_token:
+            logging.info("REinstall")
+            store.token = store_token
+            store.uninstalled = False
+            store.put()
 
         if not store:
-            store = ShopifyStore.create( store_url ) 
+            store = ShopifyStore.create( store_url, store_token ) 
         
         return store
 
@@ -222,8 +234,8 @@ class ShopifyStore( Model ):
                                               self.token,
                                               self.charge_id )
 
-    def fetch_store_info(self, token):
-        data = ShopifyAPI.fetch_store_info( self.url, token )
+    def fetch_store_info(self):
+        data = ShopifyAPI.fetch_store_info( self.url, self.token )
         
         domain = get_shopify_url( data['domain'] ) 
         if domain == '':

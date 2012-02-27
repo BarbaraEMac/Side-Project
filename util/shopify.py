@@ -203,11 +203,7 @@ class ShopifyAPI():
         # Auth the http lib
         h.add_credentials(username, password)
         
-        settings = { "recurring_application_charge": {
-                        "id": charge_id,
-                        "name": APP_NAME,
-                        "price" : 0.99 } 
-                   }
+        settings = { "recurring_application_charge": { "id": charge_id } }
 
         resp, content = h.request(url, "POST", body=json.dumps(settings), headers=header)
         logging.info('%r %r' % (resp, content)) 
@@ -257,3 +253,97 @@ class ShopifyAPI():
         logging.info('shop: %s' % (shop))
         
         return shop    
+
+
+    @staticmethod
+    def onetime_charge( store_url, store_token, settings ):
+        """ Setup store with a recurring blling charge for htis app."""
+        url      = '%s/admin/application_charges.json' % store_url
+        
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
+        header   = {'content-type':'application/json'}
+        h        = httplib2.Http()
+        
+        # Auth the http lib
+        h.add_credentials(username, password)
+        
+        logging.info('url %s' % url)
+        resp, content = h.request(
+                url,
+                "POST",
+                body    = json.dumps(settings),
+                headers = header
+            )
+
+        logging.info('%r %r' % (resp, content)) 
+        if int(resp.status) == 201:
+            data = json.loads ( content )['application_charge']
+            return data['confirmation_url']
+
+        return ''
+
+    @staticmethod
+    def verify_charge( store_url, store_token, charge_id ):
+        """ Setup store with a recurring blling charge for htis app."""
+        url      = '%s/admin/application_charges/%s.json' % (store_url, charge_id)
+        
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
+        header   = {'content-type':'application/json'}
+        h        = httplib2.Http()
+        
+        # Auth the http lib
+        h.add_credentials(username, password)
+
+        logging.info("BARBAR %s" % url)
+        
+        resp, content = h.request(url, "GET", headers=header)
+        logging.info('%r %r' % (resp, content)) 
+        if int(resp.status) == 201 or int(resp.status) == 200:
+            data = json.loads ( content )['application_charge']
+            return data['status'] == 'accepted' or data['status'] == 'active'
+
+        return False
+
+    @staticmethod
+    def activate_charge( store_url, store_token, charge_id ):
+        """ Setup store with a recurring blling charge for htis app."""
+        url      = '%s/admin/application_charges/%s/activate.json' % (store_url, charge_id)
+        
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
+        header   = {'content-type':'application/json'}
+        h        = httplib2.Http()
+        
+        # Auth the http lib
+        h.add_credentials(username, password)
+        
+        settings = { "application_charge": { "id": charge_id } }
+
+        resp, content = h.request(url, "POST", body=json.dumps(settings), headers=header)
+        logging.info('%r %r' % (resp, content)) 
+        if int(resp.status) == 201 or int(resp.status) == 200:
+            return True #success
+
+        return False #failure
+
+    @staticmethod
+    def delete_charge( store_url, store_token, charge_id ):
+        """ Setup store with a recurring blling charge for htis app."""
+        url      = '%s/admin/application_charges/%s.json' % (store_url, charge_id)
+        
+        username = PLUS_API_KEY 
+        password = hashlib.md5(PLUS_API_SECRET + store_token).hexdigest()
+        header   = {'content-type':'application/json'}
+        h        = httplib2.Http()
+        
+        # Auth the http lib
+        h.add_credentials(username, password)
+        
+        resp, content = h.request(url, "DELETE", headers=header)
+        logging.info('Uninstall: %r %r' % (resp, content)) 
+        if int(resp.status) == 201 or int(resp.status) == 200:
+            return True #success
+
+        return False #failure

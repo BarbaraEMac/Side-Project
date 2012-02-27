@@ -54,7 +54,6 @@ TEMPLATE_DIRS = (
 INSTALLED_APPS = [
     'admin',
     'analytics',
-    'app',
     'email',
     'feedback',
     'gae_bingo',
