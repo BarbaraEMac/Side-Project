@@ -13,5 +13,6 @@ urlpatterns = [
     # Processes
     (r'/store/biller',              StoreBiller),
     (r'/store/click',               StoreClick),
-    (r'/store/setup',               StoreSetup)
+    (r'/store/setup',               StoreSetup),
+    (r'/store/uninstall',           StoreUninstall),
 ]

@@ -58,3 +58,20 @@ class StoreBiller( URIHandler ):
                                                      settings )
         self.response.out.write( redirect_url )
 
+class StoreUninstall( URIHandler ):
+    def get(self):
+        return self.post()
+
+    def post( self ):
+        store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
+
+        store.delete()
+        
+        Email.emailBarbara(
+            'Unistall: %s %s %s' % (
+                self.uuid,
+                self.name,
+                self.url
+            )
+        )
+

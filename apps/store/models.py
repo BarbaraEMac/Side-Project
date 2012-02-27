@@ -186,7 +186,7 @@ class ShopifyStore( Model ):
         # Install the "App Uninstall" webhook
         data = {
             "webhook": {
-                "address": "%s/a/webhook/uninstall?u=%s" % (
+                "address": "%s/store/uninstall?s_u=%s" % (
                     URL,
                     self.uuid
                 ),
