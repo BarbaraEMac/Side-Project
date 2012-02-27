@@ -1,37 +1,37 @@
-var AppsyDaisy_waitForPinterest = function() {
+var AppsyDaisyPinterest_waitForPinterest = function() {
     var btn      = document.getElementById( 'AppsyPinterest' );
     var children = btn.childNodes;
     var runFlag  = false;
 
     for ( var i = 0; i < children.length; i ++ ) {
-        if( children[i].tagName === "IFRAME" ) {
+        if( children[i].tagName != undefined && children[i].tagName.toLowerCase() === "iframe" ) {
             runFlag = true;
         }
     }
     
     if ( runFlag ) {
-        AppsyDaisy_waitForJquery();
+        AppsyDaisyPinterest_waitForJquery();
     } else {
-        window.setTimeout(AppsyDaisy_waitForPinterest, 100);
+        window.setTimeout(AppsyDaisyPinterest_waitForPinterest, 100);
     }
 };
 
-var AppsyDaisy_waitForJquery = function() {
+var AppsyDaisyPinterest_waitForJquery = function() {
     if ( typeof jQuery != 'function' ) {
-        window.setTimeout(AppsyDaisy_waitForJquery, 100);
+        window.setTimeout(AppsyDaisyPinterest_waitForJquery, 100);
     } else {
-        AppsyDaisy_run();
+        AppsyDaisyPinterest_run();
     }
 }
 
-var AppsyDaisy_run = function() {
-    var btn  = document.getElementById( 'AppsyPinterest' );
-    var children = btn.childNodes;
+var AppsyDaisyPinterest_run = function() {
+    var btn              = document.getElementById( 'AppsyPinterest' );
+    var children         = btn.childNodes;
     var pinterest_iframe = null;
-    var inIframe = false;
+    var inIframe         = false;
 
     for ( var i = 0; i < children.length; i ++ ) {
-        if( children[i].tagName === "IFRAME" ) {
+        if( children[i].tagName.toLowerCase() === "iframe" ) {
             pinterest_iframe = $(children[i]);
         }
     }
@@ -41,7 +41,7 @@ var AppsyDaisy_run = function() {
           //console.log('entered iframe');
           inIframe = true;
           setTimeout(function() { 
-            if ( inIframe ) { AppsyDaisy_handleClick(); }
+            if ( inIframe ) { AppsyDaisyPinterest_handleClick(); }
           }, 900);
         })
         .bind('mouseout', function(){
@@ -50,12 +50,12 @@ var AppsyDaisy_run = function() {
         });
 };
 
-var AppsyDaisy_handleClick = function(){
+var AppsyDaisyPinterest_handleClick = function(){
     var iframe = document.createElement( 'iframe' );
     iframe.style.display = 'none';
-    iframe.src = "http://appsy-daisy.appspot.com/p/click?url=" + encodeURIComponent( window.location.href );
+    iframe.src = "http://appsy-daisy.appspot.com/store/click?app=pinterest&url=" + encodeURIComponent( window.location.href );
     document.body.appendChild( iframe );
 };
 
-AppsyDaisy_waitForPinterest();
+AppsyDaisyPinterest_waitForPinterest();
 
