@@ -218,6 +218,28 @@ class ShopifyStore( Model ):
     
         self.put()
 
+    def get_cost( self ):
+        cost = 0
+        if self.pinterest_enabled:
+            cost += 1
+        if self.fancy_enabled:
+            cost += 1
+        if self.facebook_enabled:
+            cost += 1
+        if self.twitter_enabled:
+            cost += 1
+        if self.tumblr_enabled:
+            cost += 1
+        if self.gplus_enabled:
+            cost += 1
+
+        if cost == 0:
+            return 0
+        if cost == 1:
+            return 0.99
+        elif cost > 1:
+            return 0.99 + (cost-1)*0.5
+
 ## -----------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------
 ## -----------------------------------------------------------------------------

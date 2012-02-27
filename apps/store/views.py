@@ -11,8 +11,8 @@ from util.shopify_helpers   import get_shopify_url
 from util.urihandler        import URIHandler
 
 # The "Shows" ------------------------------------------------------------------
-class StoreBiller( URIHandler ):
-    def get(self):
+class StoreAppSelect( URIHandler ):
+    def get( self ):
         # Request varZ from Shopify
         store_url   = get_shopify_url( self.request.get( 'shop' ) )
         shopify_sig = self.request.get( 'signature' )
@@ -23,27 +23,15 @@ class StoreBiller( URIHandler ):
         
         # If we've already set up the app, redirect to welcome screen
         if store.charge_id != None:
-            self.redirect( "%s?s_u=%s" % (url('Welcome'), store.uuid) )
+            self.redirect( "%s?s_u=%s" % (url('StoreWelcome'), store.uuid) )
             return
         
         # Fetch store info
         store.fetch_store_info( store_token ) 
         
-        settings = {
-            "recurring_application_charge": {
-                "price": 0.99,
-                "name": "+",
-                'test' : True,
-                "return_url": "%s/store/billing_callback?s_u=%s" % (URL, store.uuid)
-              }
-        }  
+        template_values = { 'store' : store }
 
-        redirect_url = ShopifyAPI.recurring_billing( store_url, 
-                                                     store_token,
-                                                     settings )
-        
-        self.db_client = store
-        self.redirect( redirect_url )
+        self.response.out.write(self.render_page('select.html', template_values)) 
 
 class StoreBillingCallback( URIHandler ):
     def get(self):
