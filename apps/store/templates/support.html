@@ -42,8 +42,8 @@
             <a href="/"><img src="/static/imgs/banner.png" /></a>
         </div>
         <div id="right_header">
-            <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
-            <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
+            <a href="/store/welcome?s_u={{store.uuid}}"><button>Install Instructions</button></a>
+            <a href="/store/select?shop={{store.url}}"><button>Select Social Buttons</button></a>
         </div>
 
         <h1 class="prepend-top span-24 last center">Need Some Assistance?</h1>
@@ -62,7 +62,7 @@
                         <br />
                         <textarea id="main_text"> </textarea>
                         <br />
-                        <button onclick="submit();"> Submit </button>
+                        <button class="cta_btn" onclick="submit();"> Submit </button>
                     </div>
                     <div class="span-8 last">
                     <p> 
@@ -128,7 +128,7 @@
                     <div class="center">
                         <p>
                             Ready? I can't wait to help you!
-                            <button onclick="onetime_it();">Click here to authorize the one-time fee</button> 
+                            <button class="cta_btn" onclick="onetime_it();">Authorize the one-time fee</button> 
                         </p>
                     </div>
                 </div>
@@ -136,9 +136,11 @@
 
             <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
                 <div class="center">
-                    <button style="font-size: 18px; font-weight: bold">
-                        <a href="{{store.url}}/admin">Return to your Store</a>
-                    </button>
+                    <a href="{{store.url}}/admin">
+                        <button style="font-size: 18px; font-weight: bold">
+                            Return to your Store
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>

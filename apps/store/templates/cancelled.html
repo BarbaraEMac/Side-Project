@@ -8,8 +8,8 @@
         <a href="/"><img src="/static/imgs/banner.png" /></a>
     </div>
     <div id="right_header">
-        <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
-        <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
+        <a href="/store/select?shop={{store.url}}"><button>Select Social Buttons</button></a>
+        <a href="/store/support?s_u={{store.uuid}}"><button>Need Help?</button></a>
     </div>
 
     <div class="prepend-top prepend-2 span-20 append-2 last">
@@ -21,13 +21,18 @@
         </div>
         <div class="span-8 last">
             <div class="center">
-                <button style="font-size: 18px; font-weight: bold">
-                    <a href={% if onetime %}"/store/support?s_u={{store.uuid}}"{% else %}"/store/select?shop={{store.url}}"{% endif %}>Try Again?</a>
-                </button>
+                <a href={% if onetime %}"/store/support?s_u={{store.uuid}}"{% else %}"/store/select?shop={{store.url}}"{% endif %}>
+                    <button class="cta_btn" style="font-size: 18px; font-weight: bold">
+                        Try Again?
+                    </button>
+                </a>
                 <br /><br />
-                <button style="font-size: 18px; font-weight: bold">
-                    <a href="{{store.url}}/admin">Return to your Store</a>
-                </button>
+                
+                <a href="{{store.url}}/admin">
+                    <button style="font-size: 18px; font-weight: bold">
+                        Return to your Store
+                    </button>
+                </a>
             </div>
         </div>
 

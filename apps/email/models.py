@@ -20,9 +20,7 @@ from util.consts import *
 #### Addresses ####
 ###################
 
-barbara = 'z4beth@gmail.com'
-
-info = barbara
+barbara = 'social.plusplus.app@gmail.com'
 
 from_addr = barbara
 

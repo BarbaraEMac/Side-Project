@@ -48,7 +48,6 @@ class StoreBiller( URIHandler ):
             "recurring_application_charge": {
                 "price": store.get_cost(),
                 "name": "Social ++ Shopify App",
-                'test' : True,
                 "return_url": "%s/store/billing_callback?s_u=%s" % (URL, store.uuid)
               }
         }  
@@ -67,7 +66,6 @@ class StoreOneTime( URIHandler ):
             "application_charge": {
                 "price": 5.00,
                 "name": "Customization & Support",
-                'test' : True,
                 "return_url": "%s/store/onetime_callback?s_u=%s" % (URL, store.uuid)
               }
         }  

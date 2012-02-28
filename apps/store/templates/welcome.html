@@ -10,8 +10,8 @@
             <a href="/"><img src="/static/imgs/banner.png" /></a>
         </div>
         <div id="right_header">
-            <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
-            <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
+            <a href="/store/select?shop={{store.url}}"><button>Select Social Buttons</button></a>
+            <a href="/store/support?s_u={{store.uuid}}"><button>Need Help?</button></a>
         </div>
 
         <div class="lower-50 prepend-5 span-4 append-2" style="font-size: 1.5em; font-weight: bold; opacity: 0.6;"> 1. Register Store </div>
@@ -28,7 +28,7 @@
             </div>
 
             <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
-                <p>1. In your <button><a target="_blank" href="{{store.url}}/admin">Shopify administration panel</a></button>, open the <em>Template Editor</em> under <em>Themes</em>.</p>
+                <p>1. In your <a target="_blank" href="{{store.url}}/admin">Shopify administration panel</a>, open the <em>Template Editor</em> under <em>Themes</em>.</p>
                 
                 <img class="span-18" src="/static/imgs/template_editor.png" />
             </div>
@@ -83,18 +83,20 @@
             <div class="center prepend-top prepend-3 span-18 append-3 last append-bottom">
                 <p><b>All done! Easy peasy, eh?</b></p>
                 <p>Want to customize the layout / orientation, button order, or button location?</p>
-                <p>If you want to know what is available, <a href="/feedback?s_u={{store.uuid}}">Email Me</a> OR if you want me to make changes for you, click <a
+                <p>If you want to know what is available, <a href="/feedback?s_u={{store.uuid}}">Email me</a> OR if you want me to make changes for you, click <a
                 href="/store/support?s_u={{store.uuid}}">here</a>.</p>
                 <br />
-                <p>Thanks so much! Please leave some kind words in the <button><a target="_blank" href="http://apps.shopify.com/">Shopify App Store</a></button> for other merchants.</p>
+                <p>Thanks so much! Please leave some kind words in the <a target="_blank" href="http://apps.shopify.com/">Shopify App Store</a> for other merchants.</p>
 
             </div>
 
             <div class="prepend-top prepend-3 span-18 append-3 last append-bottom">
                 <div class="center">
-                    <button style="font-size: 18px; font-weight: bold">
-                        <a href="{{store.url}}/admin">Return to your Store</a>
-                    </button>
+                    <a href="{{store.url}}/admin">
+                        <button style="font-size: 18px; font-weight: bold">
+                            Return to your Store
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>

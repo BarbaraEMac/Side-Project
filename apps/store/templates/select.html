@@ -58,8 +58,8 @@
     </div>
     {% if paid %}
         <div id="right_header">
-            <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
-            <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
+            <a href="/store/welcome?s_u={{store.uuid}}"><button>Install Instructions</button></a>
+            <a href="/store/support?s_u={{store.uuid}}"><button>Need Help?</button></a>
         </div>
     {% endif %}
 
@@ -153,7 +153,7 @@
     <div class="prepend-top prepend-2 span-20 append-2 last">
         <div id="install">
             All Ready?
-            <button onclick="update_selects();">Let's Go!</button>
+            <button class="cta_btn" onclick="update_selects();">Let's Go!</button>
         </div>
         <p style="text-align: right">You'll be prompted by Shopify to authorize a transaction.</p>
     </div>

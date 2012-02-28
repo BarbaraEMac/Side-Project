@@ -22,11 +22,13 @@
     <div id="left_header">
         <a href="/"><img src="/static/imgs/banner.png" /></a>
     </div>
-    <div id="right_header">
-        <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
-        <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
-        <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
-    </div>
+    {% if store %}
+        <div id="right_header">
+            <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
+            <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
+            <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
+        </div>
+    {% endif %}
 
     <div class="prepend-top span-24 last center">
         <h1>Comments, Questions, Concerns & Feedback</h1>

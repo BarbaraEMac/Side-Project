@@ -17,6 +17,10 @@
 {% endblock head %}
 
 {% block content %}
+        <div id="right_header">
+           <a href="/more"><button>Learn More</button></a>
+        </div>
+
     <div class="prepend-top span-24 last center">
         <img src="/static/imgs/banner.png" width="310px" />
         <p>
@@ -27,29 +31,17 @@
     </div>
 
     <div class="prepend-top prepend-1 span-22 append-1 last">
-        <div class="span-14">
+        <div class="span-13 append-1">
             <ul>
-                <li>Mix and match from 6 social sharing buttons</li>
-                <li>Learn about your most talked about products via weekly analytics</li>
+                <li>Effortlessly install the #1 social sharing buttons</li>
+                <li>Discover your most talked about products</li>
                 <li>Fully customizable installation available</li>
             </ul>
-            <p>A collection of social sharing buttons that you can mix and match to place on your store's product pages. These buttons will increase your store's social traffic by allowing your customers to share their favourite products across their social networks.</p>
+            <br /><br />
+            <p style="text-align: justify; font-size: 1.2em; line-height: 2.0em;">
+                A collection of social sharing buttons that you can mix and match to place on your store's product pages. These buttons will increase your store's social traffic by allowing your customers to share their favourite products across their social networks.
+            </p>
 
-            <p>Here are the social sharing buttons that you can select from:</p>
-            <ul>
-                <li class="small_bullets">Facebook</li>
-                <li class="small_bullets">Fancy</li>
-                <li class="small_bullets">Google Plus</li>
-                <li class="small_bullets">Pinterest</li>
-                <li class="small_bullets">Tumblr</li>
-                <li class="small_bullets">Twitter</li>
-                <li class="small_bullets">More coming ... </li>
-            </ul>
-            <p>Select as many or as few as you'd like! The first button costs $0.99 and each additional button costs just $0.50!</p>
-
-            <p>Each installation can be 100% customized and tailored to suit your store. More details can be found upon installation.</p>
-
-            <p>Brought to you by the same developer as top Shopify App, <a href="http://apps.shopify.com/shopconnection">ShopConnection</a>! We have great customer support and want to help at every step!</p>
         </div>
 
         <div class="span-8 last">
@@ -62,15 +54,23 @@
                 <img src='/static/imgs/tweet_logo.png' class='slideshowImg' /> 
             </div>
 
-            <div class="lower-100 span-8 last center">
-                Want to <a href="/more"><button>Learn More?</button></a>
+            <div class="span-8 last center" style="font-size: 1.3em">
+                <b>Price:</b> $0.99 - $3.49
                 <br /><br />
-                Ready to install? <a href="http://apps.shopify.com/socialplusplus"><button>Let's GO</button></a>
+                <a href="http://apps.shopify.com/social">
+                    <button class="cta_btn" style="font-size: 2.0em">
+                        Install Now
+                    </button>
+                </a>
             </div>
         </div>
+
+        <div class="prepend-top span-22 last center">
+            <br />
+            <p>Brought to you by the same developer as top Shopify App, <a href="http://apps.shopify.com/shopconnection">ShopConnection</a>!
+            <br /><br />
+            We have great customer support and want to help at every step!</p>
+        </div>
+
     </div>
 {% endblock content %}
-
-{% block bottom_content %}
-{% endblock bottom_content %}
-
