@@ -57,7 +57,7 @@ facebook_script = """
     }(document, 'script', 'facebook-jssdk'));
 </script>"""
 
-facebook_button = """<div id="AppsyFacebook" style="float: left; width: 90px;"> <div class="fb-like" data-href="http://appsy-daisy.appspot.com" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div></div>"""
+facebook_button = """<div id="AppsyFacebook" style="float: left; width: 90px !important; overflow: hidden;"> <div class="fb-like" data-href="http://appsy-daisy.appspot.com" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div></div>"""
         
 appsy_facebook_script = """
     <script>

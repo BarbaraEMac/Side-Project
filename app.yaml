@@ -1,6 +1,6 @@
-application: appsy-daisy
+application: social-plusplus
 
-version: 2
+version: 1
 runtime: python
 api_version: 1
 default_expiration: "1d" # expiration time for static content
