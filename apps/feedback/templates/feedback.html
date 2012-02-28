@@ -24,9 +24,9 @@
     </div>
     {% if store %}
         <div id="right_header">
-            <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
-            <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
-            <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
+            <a class="noanchor" href="/store/welcome?s_u={{store.uuid}}"><button>Install Instructions</button></a>
+            <a class="noanchor" href="/store/select?shop={{store.url}}"><button>Select Social Buttons</button></a>
+            <a class="noanchor" href="/store/support?s_u={{store.uuid}}"><button>Need Help?</button></a>
         </div>
     {% endif %}
 
@@ -47,7 +47,7 @@
             <br />
             <textarea id="main_text"> </textarea>
             <br />
-            <button onclick="submit();"> Submit </button>
+            <button class="cta_btn" onclick="submit();"> Submit </button>
         </div>
         <div id="after">
             <p>Thanks!</p>

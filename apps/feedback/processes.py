@@ -31,6 +31,6 @@ class FeedbackPost( URIHandler ):
             url = os.environ['HTTP_REFERER']
 
         # Email Barbara
-        Email.emailBarbara( '<p>[%s]:</p> <p>%s: %s</p> <p>%s</p> <p>%s</p> <p>%s</p><p>%s</p><p>%s</p>' % (title, owner, email, text, store_name, store_url, url) )
+        Email.emailBarbara( '<p>[%s]:</p> <p>%s: %s</p> <p>%s</p> <p>%s</p> <p>%s</p><p>%s</p>' % (title, owner, email, text, store_name, store_url, url) )
 
         self.response.out.write("Thanks!") 
