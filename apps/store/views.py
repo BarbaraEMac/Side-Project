@@ -28,9 +28,10 @@ class StoreAppSelect( URIHandler ):
             return
         """
         
+        paid = store.charge_id != None
         template_values = { 'store' : store,
-                            'paid'  : store.charge_id != None,
-                            'cost'  : store.get_cost() }
+                            'paid'  : paid,
+                            'cost'  : store.get_cost() if paid else 3.49 }
 
         self.response.out.write(self.render_page('select.html', template_values)) 
 
@@ -60,6 +61,7 @@ class StoreRecurringCancelled( URIHandler ):
         onetime = self.request.get( 'onetime' )
 
         if onetime == "":
+            store.charge_id = None
             store.update_buttons( False, False, False, False, False, False )
 
         template_values = { 'store'   : store,

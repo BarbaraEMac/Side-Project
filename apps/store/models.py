@@ -62,6 +62,7 @@ class ShopifyStore( Model ):
         return db.Query(ShopifyStore).filter('uuid =', uuid).get()
     
     def delete( self ):
+        self.charge_id   = None
         self.uninstalled = True
         self.put()
 
