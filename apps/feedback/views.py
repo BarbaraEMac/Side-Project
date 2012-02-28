@@ -3,6 +3,7 @@
 import logging
 
 from apps.feedback.models import Feedback
+from apps.store.models    import ShopifyStore
 from util.urihandler      import URIHandler
 
 # The "Shows" ------------------------------------------------------------------
