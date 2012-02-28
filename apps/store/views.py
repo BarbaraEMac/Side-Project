@@ -28,7 +28,9 @@ class StoreAppSelect( URIHandler ):
             return
         """
         
-        template_values = { 'store' : store }
+        template_values = { 'store' : store,
+                            'paid'  : store.charge_id != None,
+                            'cost'  : store.get_cost() }
 
         self.response.out.write(self.render_page('select.html', template_values)) 
 
@@ -41,7 +43,8 @@ class StoreRecurringCallback( URIHandler ):
         if ShopifyAPI.verify_recurring_charge( store.url, 
                                                store.token, 
                                                charge_id ):
-            store.do_install()
+            if store.charge_id is None:
+                store.do_install()
             
             store.charge_id = charge_id
             store.put()
@@ -54,7 +57,14 @@ class StoreRecurringCallback( URIHandler ):
 class StoreRecurringCancelled( URIHandler ):
     def get( self ):
         store = ShopifyStore.get_by_uuid( self.request.get('s_u') )
-        template_values = { 'store' : store }
+        onetime = self.request.get( 'onetime' )
+
+        if onetime == "":
+            store.update_buttons( False, False, False, False, False, False )
+
+        template_values = { 'store'   : store,
+                            'onetime' : onetime != "" 
+                          }
 
         self.response.out.write(self.render_page('cancelled.html', template_values)) 
 
@@ -73,7 +83,7 @@ class StoreOneTimeCallback( URIHandler ):
             self.redirect("%s?s_u=%s&thx=true" % (url('StoreSupport'), store.uuid) )
         
         else:
-            self.redirect( "%s?s_u=%s" % (url('StoreOneTimeCancelled'), store.uuid) )
+            self.redirect( "%s?s_u=%s&onetime=true" % (url('StoreOneTimeCancelled'), store.uuid) )
 
 class StoreOneTimeCancelled( URIHandler ):
     def get( self ):

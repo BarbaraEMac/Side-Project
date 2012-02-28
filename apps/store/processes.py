@@ -24,30 +24,30 @@ class StoreClick( URIHandler ):
 
 class StoreSetup( URIHandler ):
     def post( self ):
-        store_url = get_shopify_url( self.request.get('url') )
 
-        store = ShopifyStore.get_by_url(store_url)
+        store = ShopifyStore.get_by_url( self.request.get('url') )
 
         if not store:
+            logging.info("making a new store")
             store = ShopifyStore.create( store_url )
         
-        store.updateButtons( self.request.get('pinterest') == 'true',
+        store.update_buttons( self.request.get('pinterest') == 'true',
                              self.request.get('facebook') == 'true',
                              self.request.get('twitter') == 'true',
                              self.request.get('tumblr') == 'true',
                              self.request.get('fancy') == 'true',
                              self.request.get('gplus') == 'true' )
 
+        logging.info('TOKEN: %s'% store.token)
+
 class StoreBiller( URIHandler ):
     def post( self ):
 
-        store_url = get_shopify_url( self.request.get('url') )
-
-        store = ShopifyStore.get_by_url(store_url)
+        store = ShopifyStore.get_by_url( self.request.get('url') )
         settings = {
             "recurring_application_charge": {
                 "price": store.get_cost(),
-                "name": "SocialPlus",
+                "name": "Social ++ Shopify App",
                 'test' : True,
                 "return_url": "%s/store/billing_callback?s_u=%s" % (URL, store.uuid)
               }

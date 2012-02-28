@@ -87,13 +87,14 @@ class ShopifyStore( Model ):
 
         store = ShopifyStore( key_name = uuid,
                               uuid     = uuid,
-                              url      = url_ )
+                              url      = url_,
+                              token    = token )
         
-        store.fetch_store_info( token )
+        store.fetch_store_info( )
         
         return store
     
-    def updateButtons( self, p, fb, tw, g, f, t ):
+    def update_buttons( self, p, fb, tw, g, f, t ):
         self.pinterest_enabled = p
         self.facebook_enabled  = fb
         self.twitter_enabled   = tw
@@ -102,6 +103,8 @@ class ShopifyStore( Model ):
         self.tumblr_enabled    = t
 
         self.put()
+
+        self.install_assets( )
 
     # Accessors 
     @staticmethod
@@ -114,71 +117,29 @@ class ShopifyStore( Model ):
     @staticmethod
     def get_or_create( store_url, store_token ):
         store = ShopifyStore.get_by_url( store_url )
+
+        if not store:
+            store = ShopifyStore.create( store_url, store_token ) 
         
-        if store.uninstalled == True or store.token != store_token:
+        elif store.uninstalled == True or (store_token != "" and store.token != store_token):
             logging.info("REinstall")
             store.token = store_token
             store.uninstalled = False
             store.put()
-
-        if not store:
-            store = ShopifyStore.create( store_url, store_token ) 
         
         return store
 
     # Shopify API Calls  -------------------------------------------------------
     def do_install( self ):
-        # Define our asset 
-        scripts = buttons = appsy_scripts = ""
         
-        if self.pinterest_enabled:
-            scripts += pinterest_script 
-            buttons += '\n%s' % pinterest_button
-            appsy_scripts += appsy_pinterest_script
-        
-        if self.fancy_enabled:
-            scripts += fancy_script 
-            buttons += '\n%s' % fancy_button
-            appsy_scripts += appsy_fancy_script
-        
-        if self.facebook_enabled:
-            scripts += facebook_script 
-            buttons += '\n%s' % facebook_button
-            appsy_scripts += appsy_facebook_script
-        
-        if self.tumblr_enabled:
-            scripts += tumblr_script 
-            buttons += '\n%s' %  tumblr_button
-            appsy_scripts += appsy_tumblr_script
-        
-        if self.gplus_enabled:
-            scripts += gplus_script 
-            buttons += '\n%s' % gplus_button
-            appsy_scripts += appsy_gplus_script
-        
-        if self.twitter_enabled:
-            scripts += twitter_script 
-            buttons += '\n%s' % twitter_button
-            appsy_scripts += appsy_twitter_script
-        
-        div = "\n\n<div id='AppsyDaisy' style='float: left;'>%s\n</div>\n" % buttons
-
-        liquid_assets = [{
-            'asset': {
-                'value': "%s %s %s" % (div, scripts, appsy_scripts),
-                'key': 'snippets/social_plus.liquid'
-            }
-        }]
-
         # Install yourself in the Shopify store
         self.install_webhooks( webhooks = None )
-        self.install_assets( assets = liquid_assets )
+        self.install_assets( )
         
         self.activate_recurring_billing( )
 
         Email.welcomeClient( self.email, 
-                             self.full_name, 
-                             self.name )
+                             self.full_name )
         
         # Email Barbara
         Email.emailBarbara(
@@ -221,9 +182,48 @@ class ShopifyStore( Model ):
                                         self.token,
                                         script_tags )
         
-    def install_assets(self, assets=None):
-        if assets == None:
-            assets = []
+    def install_assets(self):
+        # Define our asset 
+        scripts = buttons = appsy_scripts = ""
+        
+        if self.pinterest_enabled:
+            scripts += pinterest_script 
+            buttons += '\n%s' % pinterest_button
+            appsy_scripts += appsy_pinterest_script
+        
+        if self.fancy_enabled:
+            scripts += fancy_script 
+            buttons += '\n%s' % fancy_button
+            appsy_scripts += appsy_fancy_script
+        
+        if self.facebook_enabled:
+            scripts += facebook_script 
+            buttons += '\n%s' % facebook_button
+            appsy_scripts += appsy_facebook_script
+        
+        if self.tumblr_enabled:
+            scripts += tumblr_script 
+            buttons += '\n%s' %  tumblr_button
+            appsy_scripts += appsy_tumblr_script
+        
+        if self.gplus_enabled:
+            scripts += gplus_script 
+            buttons += '\n%s' % gplus_button
+            appsy_scripts += appsy_gplus_script
+        
+        if self.twitter_enabled:
+            scripts += twitter_script 
+            buttons += '\n%s' % twitter_button
+            appsy_scripts += appsy_twitter_script
+        
+        div = "<div id='AppsyDaisy' style='float: left;'>%s\n</div>\n\n" % buttons
+
+        assets = [{
+            'asset': {
+                'value': "%s %s %s" % (div, scripts, appsy_scripts),
+                'key': 'snippets/social_plus.liquid'
+            }
+        }]
 
         ShopifyAPI.install_assets( self.url, 
                                    self.token,
@@ -241,7 +241,6 @@ class ShopifyStore( Model ):
         if domain == '':
             domain = url_
 
-        self.token     = token
         self.email     = data['email']
         self.name      = data['name']
         self.domain    = domain

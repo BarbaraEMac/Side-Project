@@ -59,7 +59,7 @@ class Email():
         Email.send_email(from_addr, to_addr, subject, body)
 
     @staticmethod
-    def welcomeClient( app_name, to_addr, name, store_name ):
+    def welcomeClient( to_addr, name ):
         to_addr = to_addr
         subject = 'Thanks!'
     
@@ -70,8 +70,8 @@ class Email():
             pass
 
         body = """<p>Hi %s,</p><p>Just wanted to drop you a line and say thanks for
-        installing my Shopify App.</p><p>If you have any comments or questions, please
-        email me!</p><p>--Kurtis</p>""" % name
+        installing my Shopify App, Social++.</p><p>If you have any comments or questions, please
+        email me!</p><p>--Barbara</p>""" % name
         
         Email.send_email(from_addr, to_addr, subject, body)
 

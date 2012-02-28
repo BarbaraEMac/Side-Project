@@ -2,7 +2,7 @@
 
 {% block head %}
     <script>
-        var total = 3.49;
+        var total = {{cost}};
 
         var update_selects = function() {
             $.ajax({ type: "POST",
@@ -56,14 +56,16 @@
     <div id="left_header">
         <img src="/static/imgs/banner.png" />
     </div>
-    <div id="right_header">
-        <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
-        <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
-    </div>
+    {% if paid %}
+        <div id="right_header">
+            <button><a href="/store/welcome?s_u={{store.uuid}}">Install Instructions</a></button>
+            <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
+        </div>
+    {% endif %}
 
     <div class="prepend-top span-24 last center">
-        <h1>Let's Start!</h1>
-        <p>Which buttons would you like on your store?</p>
+        <h1>Welcome {{store.full_name}}!</h1>
+        <p>Which buttons would you like on your store? You can always change these later!</p>
     </div>
 
     <div class="prepend-top prepend-2 span-22 last">
@@ -102,33 +104,54 @@
         </div> 
     </div>
 
-    <div class="prepend-top prepend-2 span-22 last center">
-        <div class="span-3">
-            <input id="pinterest" name="pinterest" type="checkbox" checked="checked" onclick="handleClick(this);" />
-        </div>
-        <div class="span-3">
-            <input id="facebook" name="facebook" type="checkbox" checked="checked" onclick="handleClick(this);" />
-        </div>
-        <div class="span-3">
-            <input id="twitter" name="twitter" type="checkbox" checked="checked" onclick="handleClick(this);" />
-        </div>
-        <div class="span-3">
-            <input id="fancy" name="fancy" type="checkbox" checked="checked" onclick="handleClick(this);" />
-        </div>
-        <div class="span-3">
-            <input id="gplus" name="gplus" type="checkbox" checked="checked" onclick="handleClick(this);" />
-        </div>
-        <div class="span-3">
-            <input id="tumblr" name="tumblr" type="checkbox" checked="checked" onclick="handleClick(this);" />
-        </div>
-        <div class="span-2 last">
-            <b><p id="total">$3.49</p></b>
+    <div class="prepend-2 span-22 last">
+        {% if paid %}
+            <div class="span-3">
+                <input id="pinterest" name="pinterest" type="checkbox" {% if store.pinterest_enabled %}checked="checked"{% endif %} onclick="handleClick(this);" style="margin-left: 35px;" />
+            </div>
+            <div class="span-3">
+                <input id="facebook" name="facebook" type="checkbox" {% ifequal store.facebook_enabled "True" %}checked="checked"{% endifequal %} onclick="handleClick(this);" style="margin-left: 20px;" />
+            </div>
+            <div class="span-3">
+                <input id="twitter" name="twitter" type="checkbox" {% if store.twitter_enabled %}checked="checked"{% endif %} onclick="handleClick(this);" style="margin-left: 35px;" />
+            </div>
+            <div class="span-3">
+                <input id="fancy" name="fancy" type="checkbox" {% if store.fancy_enabled %}checked="checked"{% endif %} onclick="handleClick(this);" style="margin-left: 25px;" />
+            </div>
+            <div class="span-3">
+                <input id="gplus" name="gplus" type="checkbox" {% if store.gplus_enabled %}checked="checked"{% endif %} onclick="handleClick(this);" style="margin-left: 10px;" />
+            </div>
+            <div class="span-3">
+                <input id="tumblr" name="tumblr" type="checkbox" {% if store.tumblr_enabled %}checked="checked"{% endif %} onclick="handleClick(this);"  style="margin-left: 25px;" />
+            </div>
+        {% else %}
+            <div class="span-3">
+                <input id="pinterest" name="pinterest" type="checkbox" checked="checked" onclick="handleClick(this);" style="margin-left: 35px;" />
+            </div>
+            <div class="span-3">
+                <input id="facebook" name="facebook" type="checkbox" checked="checked" onclick="handleClick(this);" style="margin-left: 20px;" />
+            </div>
+            <div class="span-3">
+                <input id="twitter" name="twitter" type="checkbox" checked="checked" onclick="handleClick(this);" style="margin-left: 35px;" />
+            </div>
+            <div class="span-3">
+                <input id="fancy" name="fancy" type="checkbox" checked="checked" onclick="handleClick(this);" style="margin-left: 25px;" />
+            </div>
+            <div class="span-3">
+                <input id="gplus" name="gplus" type="checkbox" checked="checked" onclick="handleClick(this);" style="margin-left: 10px;" />
+            </div>
+            <div class="span-3">
+                <input id="tumblr" name="tumblr" type="checkbox" checked="checked" onclick="handleClick(this);" style="margin-left: 25px;" />
+            </div>
+        {% endif %}
+        <div class="span-2 last" style="font-size: 1.5em">
+            <b><p id="total">${{cost}}</p></b>
         </div>
     </div>
 
     <div class="prepend-top prepend-2 span-20 append-2 last">
         <div id="install">
-            All Ready? <br />
+            All Ready?
             <button onclick="update_selects();">Let's Go!</button>
         </div>
     </div>

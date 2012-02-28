@@ -4,21 +4,27 @@
 {% endblock head %}
 
 {% block content %}
-    <div id="right_header">
-        <button><a href="/">Home</a></button>
+    <div id="left_header">
+        <a href="/"><img src="/static/imgs/banner.png" /></a>
     </div>
-
-    <div class="prepend-top span-24 append-bottom last center">
-        <img class="app_logo" src="/static/imgs/logo1.png" width="310px" height="100px"/>
+    <div id="right_header">
+        <button><a href="/store/select?shop={{store.url}}">Select Social Buttons</a></button>
+        <button><a href="/store/support?s_u={{store.uuid}}">Need Help?</a></button>
     </div>
 
     <div class="prepend-top prepend-2 span-20 append-2 last">
+        <h1 class="center">Uh oh!</h1>
+
         <div class="span-12" style="font-size: 1.5em; font-weight: bold;">
             Sorry to hear you didn't authorize the transaction. <br /><br />
             I would have loved to work with you.
         </div>
         <div class="span-8 last">
             <div class="center">
+                <button style="font-size: 18px; font-weight: bold">
+                    <a href={% if onetime %}"/store/support?s_u={{store.uuid}}"{% else %}"/store/select?shop={{store.url}}"{% endif %}>Try Again?</a>
+                </button>
+                <br /><br />
                 <button style="font-size: 18px; font-weight: bold">
                     <a href="{{store.url}}/admin">Return to your Store</a>
                 </button>

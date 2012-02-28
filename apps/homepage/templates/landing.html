@@ -1,133 +1,42 @@
 {% extends "base.html" %}
 
 {% block head %}
+    <script type="text/javascript" src="/static/js/jquery.cycle.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.easing.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('.slideshow img:first').fadeIn(1000, function() {
+            $('.slideshow').cycle({
+                fx:     'fade', 
+                speed:   1000,
+                timeout: 500
+            });
+        });
+    });
+    </script>
 {% endblock head %}
 
 {% block content %}
     <div class="prepend-top span-24 last center">
         <img src="/static/imgs/banner.png" width="310px" />
-        <p>Great, easy-to-install Shopify Apps!</p>
+        <p>Social buttons for your store PLUS usage statistics for you!</p>
     </div>
 
     <div class="prepend-top prepend-1 span-22 append-1 last">
-        <a href="/pinterest">
-            <div class="landing_app app_margin">
-                <div class="app_img">
-                    <img src="/static/imgs/pinterest_banner.png">
-                </div>
+        <div class="span-11">
 
-                <div class="app_text">
-                    <h2>Pinterest+</h2>
-                    <p>$0.99 / month</p>
-                </div>
+        </div>
+
+        <div class="span-11 last">
+            <div class="slideshow span-10 last center">
+                <img src='/static/imgs/pinterest_banner.png' class='first slideshowImg' />
+                <img src='/static/imgs/fancy_logo.png' class='slideshowImg' />
+                <img src='/static/imgs/gplus_logo.gif' class='slideshowImg' />
+                <img src='/static/imgs/like_logo.png' class='slideshowImg' />
+                <img src='/static/imgs/tumblr_logo.png' class='slideshowImg' />
+                <img src='/static/imgs/tweet_logo.png' class='slideshowImg' /> 
             </div>
-        </a>
-
-        <a href="/svpply">
-            <div class="landing_app app_margin">
-                <div class="app_img">
-                    <img src="/static/imgs/svpply_logo.png">
-                </div>
-
-                <div class="app_text">
-                    <h2>Svpply+</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-
-        <a href="/fancy">
-            <div class="landing_app">
-                <div class="app_img">
-                    <img src="/static/imgs/fancy_logo.png">
-                </div>
-
-                <div class="app_text">
-                    <h2>Fancy+</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-        
-        <a href="/want">
-            <div class="landing_app app_margin">
-                <div class="app_img">
-                    <img src="/static/imgs/want_logo.jpeg">
-                </div>
-
-                <div class="app_text">
-                    <h2>Want+</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-
-        <a href="/feedback">
-            <div class="landing_app app_margin">
-                <div class="app_img">
-                    <img src="/static/imgs/feedback_banner.png">
-                </div>
-
-                <div class="app_text">
-                    <h2>Questions & Feedback</h2>
-                    <p>Let me know what you think of my Apps</p>
-                </div>
-            </div>
-        </a>
-
-        <a href="/twitter">
-            <div class="landing_app">
-                <div class="app_img">
-                    <img src="/static/imgs/tweet_logo.png">
-                </div>
-
-                <div class="app_text">
-                    <h2>Twitter+</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-
-        <a href="/tumblr">
-            <div class="landing_app app_margin">
-                <div class="app_img">
-                    <img src="/static/imgs/tumblr_logo.png">
-                </div>
-
-                <div class="app_text">
-                    <h2>Tumblr+</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-
-        <a href="/facebook">
-            <div class="landing_app app_margin">
-                <div class="app_img">
-                    <img src="/static/imgs/like_logo.png">
-                </div>
-
-                <div class="app_text">
-                    <h2>Facebook+</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-
-
-        <a href="/gplus">
-            <div class="landing_app">
-                <div class="app_img">
-                    <img src="/static/imgs/gplus_logo.gif">
-                </div>
-
-                <div class="app_text">
-                    <h2>Google Plus +</h2>
-                    <p>$0.99 / month</p>
-                </div>
-            </div>
-        </a>
-
+        </div>
     </div>
 {% endblock content %}
 

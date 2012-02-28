@@ -9,7 +9,7 @@ from google.appengine.ext   import db
 from util.consts            import URL
 from util.helpers           import generate_uuid
 
-NUM_CLICK_SHARDS = 10
+NUM_CLICK_SHARDS = 5
 
 # ------------------------------------------------------------------------------
 # Analytics Class Definition ---------------------------------------------------
